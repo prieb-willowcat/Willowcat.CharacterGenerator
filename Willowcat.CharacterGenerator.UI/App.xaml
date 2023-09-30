@@ -1,0 +1,14 @@
+﻿<Application x:Class="Willowcat.CharacterGenerator.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Willowcat.CharacterGenerator.UI"
+             Startup="Application_Startup"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Willowcat.CharacterGenerator.UI;component/View/ApplicationResources/ApplicationResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>         
+    </Application.Resources>
+</Application>

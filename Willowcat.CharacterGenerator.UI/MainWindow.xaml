@@ -1,0 +1,96 @@
+﻿<Window x:Class="Willowcat.CharacterGenerator.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:Willowcat.CharacterGenerator.UI.View"
+        xmlns:commands="clr-namespace:Willowcat.CharacterGenerator.UI.Commands"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="450" Width="1000"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Window.CommandBindings>
+        <CommandBinding Command="commands:CustomCommands.New"
+                    Executed="NewCommandBinding_Executed" 
+                    CanExecute="NewCommandBinding_CanExecute" />
+        <CommandBinding Command="ApplicationCommands.Close" 
+                    Executed="CloseCommandBinding_Executed" 
+                    CanExecute="CloseCommandBinding_CanExecute"/>
+        <CommandBinding Command="ApplicationCommands.Open" 
+                    Executed="OpenCommandBinding_Executed" 
+                    CanExecute="OpenCommandBinding_CanExecute"/>
+        <CommandBinding Command="ApplicationCommands.Save" 
+                    Executed="SaveCommandBinding_Executed" 
+                    CanExecute="SaveCommandBinding_CanExecute"/>
+        <CommandBinding Command="ApplicationCommands.SaveAs" 
+                    Executed="SaveAsCommandBinding_Executed" 
+                    CanExecute="SaveAsCommandBinding_CanExecute"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding ReloadChartsCommand}" />
+        <KeyBinding Gesture="Ctrl+N" Command="commands:CustomCommands.New"/>
+        <KeyBinding Gesture="Ctrl+W" Command="ApplicationCommands.Close"/>
+        <KeyBinding Gesture="Ctrl+O" Command="ApplicationCommands.Open"/>
+        <KeyBinding Gesture="Ctrl+S" Command="ApplicationCommands.Save"/>
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="ApplicationCommands.SaveAs"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Menu>
+            <MenuItem Header="_File Commands">
+                <MenuItem Header="_New" Command="commands:CustomCommands.New" InputGestureText="Ctrl+N" />
+                <Separator/>
+                <MenuItem Header="Reload Charts" Command="{Binding ReloadChartsCommand}" InputGestureText="F5" />
+                <MenuItem Header="_Open" Command="ApplicationCommands.Open"/>
+                <MenuItem Header="_Save" Command="ApplicationCommands.Save"/>
+                <MenuItem Header="Save _As" Command="ApplicationCommands.SaveAs"/>
+                <Separator/>
+                <MenuItem Header="_Close" Command="ApplicationCommands.Close" InputGestureText="Ctrl+W" />
+            </MenuItem>
+            <MenuItem Header="Tools">
+            </MenuItem>
+        </Menu>
+
+        <Grid
+            Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="450" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="400" />
+                <!--<ColumnDefinition Width="{Binding ShowDetailView, Converter={StaticResource BooleanToToggleWidthConverter}}" />-->
+            </Grid.ColumnDefinitions>
+
+            <GridSplitter Grid.Column="0"
+                      Background="Black"
+                      Width="5"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Stretch" />
+
+            <GridSplitter Grid.Column="2"
+                      Background="Black"
+                      Width="5"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Stretch" />
+
+            <view:CharacterDetailsView 
+                Grid.Column="0"
+                Margin="5"
+                DataContext="{Binding CharacterDetailsViewModel}" />
+
+            <view:ChartView
+                Grid.Column="1"
+                Margin="5 0 5 0"
+                DataContext="{Binding ChartViewModel}" />
+
+            <view:ChartListView
+                Grid.Column="2"
+                Margin="5"
+                DataContext="{Binding ChartListViewModel}" />
+        </Grid>
+
+    </Grid>
+</Window>

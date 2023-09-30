@@ -1,0 +1,28 @@
+# CentralCasting872	Relation to Ruler of the Land
+1-67	no relation	no relation
+68	child ({1d6} in succession)	child (6 in succession)
+69-70	grandchild ({1d10} in succession)	grandchild (7 in succession)
+71-80	distant cousin ({1d100+10} in succession)	distant cousin (77 in succession)
+81-85	second cousin ({1d20+10} in succession)	second cousin (23 in succession)
+86-89	first cousin ({1d10+3} in succession)	first cousin (6 in succession)
+90	sibling ({1d6} in succession)	sibling (5 in succession)
+91-93	uncle/aunt ({2d6} in succession)	uncle/aunt (8 in succession)
+94-95	grandparent (not in line for succession)	grandparent (not in line for succession)
+# CentralCasting873	Psychic Abilities
+1	spell-like power ({$spell:{1d3}}{switch:$spell}{case:1}{Pelldom(0-Level Potions PF)}{case:2}{Pelldom(1st-Level Potions PF)}{case:3}{Pelldom(2nd-Level Potions PF)}{/switch})	spell-like power (guidance)
+2	psychometry (learn history of an object by touch)	psychometry (learn history of an object by touch)
+3	clairvoyance I (glimps or fuzzy view of distant events)	clairvoyance I (glimps or fuzzy view of distant events)
+4	clairvoyance II (clear view of chosen distant location)	clairvoyance II (clear view of chosen distant location)
+5	astral projection	astral projection
+6	psychic healing 	psychic healing
+7	hypnosis	hypnosis
+8	persuasion	persuasion
+9	telekinisis	telekinisis
+10	suspended animation	suspended animation
+11	teleportation	teleportation
+12	mind block	mind block
+13-14	ESP	ESP
+15	telepathy	telepathy
+16	mind blast	mind blast
+17	body control	body control
+18	mind control	mind control

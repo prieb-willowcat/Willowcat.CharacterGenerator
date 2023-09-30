@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="Willowcat.CharacterGenerator.UI.View.ChartListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Willowcat.CharacterGenerator.UI.View"
+             xmlns:viewmodel="clr-namespace:Willowcat.CharacterGenerator.UI.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0 0 0 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Filter by Tag: " />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding ChartFilterViewModel.Tags}" SelectedItem="{Binding ChartFilterViewModel.SelectedTag,Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <TreeView Grid.Row="1" ItemsSource="{Binding ChartCollections}" FontSize="14">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
+                    <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type viewmodel:ChartCollectionViewModel}" ItemsSource="{Binding FilteredItems}" >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding CollectionName}">
+                            <!--<TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="{Binding HasMatchingItems}" Value="True">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>-->
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding HasMatchingItems,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text=" [" Foreground="Blue" />
+                            <TextBlock Text="{Binding FilteredCount}" Foreground="Blue" />
+                            <TextBlock Text="]" Foreground="Blue" />
+                        </StackPanel>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type viewmodel:ChartListChartViewModel}" ItemsSource="{Binding SubCharts}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ChartName}" ToolTip="{Binding ChartKey}"/>
+                        <TextBlock Text="  " />
+                        <TextBlock Text="{Binding ChartKey}" Foreground="LightGray" />
+                    </StackPanel>                    
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <!--<TabControl ItemsSource="{Binding ChartCollections}" SelectedItem="{Binding SelectedChartCollection}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding CollectionName}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ListBox ItemsSource="{Binding Charts}" 
+                             SelectedItem="{Binding SelectedChart}" 
+                             FontSize="14">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ChartName}" ToolTip="{Binding Key}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>-->        
+    </Grid>
+</UserControl>
