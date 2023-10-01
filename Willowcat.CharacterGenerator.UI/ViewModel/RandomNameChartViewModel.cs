@@ -16,8 +16,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         private ObservableCollection<RegionOption> _regionOptions = new();
         private RegionOption _selectedRegion = null;
 
-        public RandomNameChartViewModel(RandomNameChart chart, ChartService chartService, IEventAggregator eventAggregator) 
-            : base(chart, chartService, eventAggregator)
+        public RandomNameChartViewModel(RandomNameChart chart, Random randomizer, ChartService chartService, IEventAggregator eventAggregator) 
+            : base(chart, randomizer, chartService, eventAggregator)
         {
             _randomNameChart = chart;
         }

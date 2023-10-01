@@ -22,33 +22,15 @@
             <RowDefinition Height="100"/>
             <!--<RowDefinition Height="Auto"/>-->
         </Grid.RowDefinitions>
-        
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                Content="🡰" 
-                Command="{Binding GoToPreviousCommand}" 
-                Margin="5" 
-                Padding="5 0"/>
-            <Button Grid.Column="2"
-                Content="🡲" 
-                Command="{Binding GoToNextCommand}" 
-                Margin="5" 
-                Padding="5 0"/>
-        </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
-            <TextBlock Text="{Binding SelectedChart.ChartLocationString}" Foreground="Gray" />
-            <TextBlock Text="{Binding SelectedChart.ChartName}" FontSize="18" FontWeight="Bold" />
+            <TextBlock Text="{Binding ChartLocationString}" Foreground="Gray" />
+            <TextBlock Text="{Binding ChartName}" FontSize="18" FontWeight="Bold" />
         </StackPanel>
 
         <!--<TextBox Grid.Row="2" Text="{Binding ChartDescription}" IsReadOnly="True" />-->
         <FlowDocumentScrollViewer Grid.Row="2"
-                                  Document="{Binding SelectedChart.ChartDescriptionDocument}"
+                                  Document="{Binding ChartDescriptionDocument}"
                                   VerticalScrollBarVisibility="Auto"/>
 
         <Grid Grid.Row="3">
@@ -62,40 +44,40 @@
                 Grid.Column="0"
                 Margin="5" Padding="5 0"
                 Content="Generate Options" 
-                Command="{Binding SelectedChart.GenerateOptionsCommand}" 
-                Visibility="{Binding SelectedChart.CanDynamicallyGenerateOptions,Converter={StaticResource BooleanToVisibilityConverter}}"
+                Command="{Binding GenerateOptionsCommand}" 
+                Visibility="{Binding CanDynamicallyGenerateOptions,Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <ComboBox 
                 Grid.Column="1"
                 Margin="5" Padding="5 0"
-                ItemsSource="{Binding SelectedChart.RegionOptions}"
-                SelectedValue="{Binding SelectedChart.SelectedRegion}"
-                Visibility="{Binding SelectedChart.ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}">
+                ItemsSource="{Binding RegionOptions}"
+                SelectedValue="{Binding SelectedRegion}"
+                Visibility="{Binding ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding SelectedChart.Description}" />
+                        <TextBlock Text="{Binding Description}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
 
             <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Label Content="{Binding SelectedChart.ChartDice}" />
+                <Label Content="{Binding ChartDice}" />
                 <TextBlock Text="+" Margin="5" />
-                <TextBox Text="{Binding SelectedChart.Modifier}" Width="100" Margin="5" />
+                <TextBox Text="{Binding Modifier}" Width="100" Margin="5" />
                 <TextBlock Text="=" Margin="5" />
-                <TextBox Text="{Binding SelectedChart.Result}" Width="100" IsReadOnly="True" Margin="5" />
-                <Button Content="Roll" Command="{Binding SelectedChart.RollCommand}" Margin="5" Padding="5 0"/>
-                <Button Content="Use Selection" Command="{Binding SelectedChart.UseSelectionCommand}" Margin="5 5 0 5" Padding="5 0"/>
+                <TextBox Text="{Binding Result}" Width="100" IsReadOnly="True" Margin="5" />
+                <Button Content="Roll" Command="{Binding RollCommand}" Margin="5" Padding="5 0"/>
+                <Button Content="Use Selection" Command="{Binding UseSelectionCommand}" Margin="5 5 0 5" Padding="5 0"/>
             </StackPanel>
         </Grid>
 
-        <DataGrid Grid.Row="4" ItemsSource="{Binding SelectedChart.ChartOptions}" SelectedIndex="{Binding SelectedChart.SelectedIndex}" 
+        <DataGrid Grid.Row="4" ItemsSource="{Binding ChartOptions}" SelectedIndex="{Binding SelectedIndex}" 
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   FontSize="14"
-                  Cursor="{Binding SelectedChart.IsProcessRunning,Converter={StaticResource BooleanToCursorValueConverter}}">
+                  Cursor="{Binding IsProcessRunning,Converter={StaticResource BooleanToCursorValueConverter}}">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
                     <EventSetter Event="MouseDoubleClick" Handler="DataGridCell_MouseDoubleClick" />
@@ -125,6 +107,6 @@
 
         <FlowDocumentScrollViewer Grid.Row="5"
                                   Margin="0 5"
-                                  Document="{Binding SelectedChart.SelectedOptionDescriptionDocument}" />
+                                  Document="{Binding SelectedOptionDescriptionDocument}" />
     </Grid>
 </UserControl>

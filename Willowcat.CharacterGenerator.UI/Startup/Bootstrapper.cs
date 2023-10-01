@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
 using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
 using Willowcat.CharacterGenerator.Core.TextRepository;
-using Willowcat.CharacterGenerator.UI.ViewModel;
+using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.Startup
 {
@@ -35,16 +33,6 @@ namespace Willowcat.CharacterGenerator.UI.Startup
         private static ServiceCollection RegisterConfigurations(this ServiceCollection services)
         {
             services.AddSingleton(App.DatabaseConfiguration);
-            return services;
-        }
-
-        private static ServiceCollection RegisterViewModels(this ServiceCollection services)
-        {
-            services.AddTransient<ChartListViewModel>();
-            services.AddTransient<ChartHistoryViewModel>();
-            services.AddTransient<ChartViewModel>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<InitializeDatabaseViewModel>();
             return services;
         }
 

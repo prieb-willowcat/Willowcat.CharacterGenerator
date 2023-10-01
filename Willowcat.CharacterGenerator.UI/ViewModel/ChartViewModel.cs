@@ -20,9 +20,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
     public class ChartViewModel : ViewModelBase
     {
-        private readonly ChartModel _Chart = null;
-        private readonly ChartService _ChartService = null;
-        private readonly IEventAggregator _EventAggregator = null;
+        private readonly ChartModel _chart = null;
+        private readonly ChartService _chartService = null;
+        private readonly IEventAggregator _eventAggregator = null;
+        private readonly Random _randomizer;
 
         private bool _IsProcessRunning = false;
         private int _SelectedIndex = -1;
@@ -33,7 +34,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public virtual bool CanDynamicallyGenerateOptions => false;
 
-        public ChartModel Chart => _Chart;
+        public ChartModel Chart => _chart;
 
         public FlowDocument ChartDescriptionDocument
         {
@@ -45,13 +46,13 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public string ChartDice => _Chart?.Dice.ToString() ?? string.Empty;
+        public string ChartDice => _chart?.Dice.ToString() ?? string.Empty;
 
         public ICommand ChartHyperLinkCommand { get; private set; }
 
-        public string ChartLocationString => string.Join(" > ", _ChartService.GetChartHierarchyPath(_Chart));
+        public string ChartLocationString => string.Join(" > ", _chartService.GetChartHierarchyPath(_chart));
 
-        public string ChartName => _Chart?.ChartName ?? "Chart";
+        public string ChartName => _chart?.ChartName ?? "Chart";
 
         public ObservableCollection<ChartOptionDetailModel> ChartOptions { get; private set; } = new ObservableCollection<ChartOptionDetailModel>();
 
@@ -67,7 +68,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public string Key => _Chart?.Key;
+        public string Key => _chart?.Key;
 
         public int? Modifier
         {
@@ -79,7 +80,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public Random Randomizer { get; set; }
 
         public int? Result
         {
@@ -122,11 +122,12 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public ICommand UseSelectionCommand { get; private set; }
 
-        public ChartViewModel(ChartModel chart, ChartService chartService, IEventAggregator eventAggregator)
+        public ChartViewModel(ChartModel chart, Random randomizer, ChartService chartService, IEventAggregator eventAggregator)
         {
-            _Chart = chart;
-            _ChartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
-            _EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _chart = chart;
+            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            _chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
             ChartHyperLinkCommand = new DelegateCommand<string>(OnChartHyperLinkExecute);
             GenerateOptionsCommand = new AsyncCommand(OnGenerateOptionsExecute, OnGenerateOptionsCanExecute);
@@ -141,7 +142,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private void OnChartHyperLinkExecute(string chartKey)
         {
-            _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(chartKey));
+            _eventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(chartKey));
         }
 
         private bool OnGenerateOptionsCanExecute() => CanDynamicallyGenerateOptions;
@@ -153,7 +154,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 try
                 {
                     IsProcessRunning = true;
-                    await GenerateOptionsAsync(Randomizer);
+                    await GenerateOptionsAsync(_randomizer);
                     OnPropertyChanged(nameof(ChartDice));
                 }
                 //catch (Exception ex)
@@ -169,9 +170,9 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private void OnRollExecute()
         {
-            if (_Chart != null)
+            if (_chart != null)
             {
-                int result = _Chart.Dice.Roll(Randomizer, Modifier ?? 0);
+                int result = _chart.Dice.Roll(_randomizer, Modifier ?? 0);
                 Result = result;
                 SelectResult(result);
             }
@@ -182,8 +183,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             if (SelectedIndex >= 0 && SelectedIndex < ChartOptions.Count)
             {
                 Guid selectedId = ChartOptions[SelectedIndex].OptionId;
-                var selectedOption = _Chart.GetSelectedOption(selectedId);
-                _EventAggregator.GetEvent<OptionSelectedEvent>().Publish(new OptionSelectedEventArgs(selectedOption));
+                var selectedOption = _chart.GetSelectedOption(selectedId);
+                _eventAggregator.GetEvent<OptionSelectedEvent>().Publish(new OptionSelectedEventArgs(selectedOption));
             }
         }
 
@@ -195,13 +196,13 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         protected void InitializeOptions(int? selectedValue)
         {
             ChartOptions.Clear();
-            if (_Chart != null)
+            if (_chart != null)
             {
-                foreach (var option in _Chart.Options.OrderBy(x => x.Range.Start))
+                foreach (var option in _chart.Options.OrderBy(x => x.Range.Start))
                 {
-                    ChartOptions.Add(new ChartOptionDetailModel(_ChartService, _EventAggregator, option));
+                    ChartOptions.Add(new ChartOptionDetailModel(_chartService, _eventAggregator, option));
                 }
-                ChartDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_ChartService, _Chart.Notes, ChartHyperLinkCommand);
+                ChartDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_chartService, _chart.Notes, ChartHyperLinkCommand);
                 if (selectedValue.HasValue)
                 {
                     SelectResult(selectedValue.Value);
@@ -211,7 +212,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private void SelectResult(int result)
         {
-            var optionDetailModel = _Chart.GetOptionForResult(result);
+            var optionDetailModel = _chart.GetOptionForResult(result);
             var selectedIndex = -1;
             if (optionDetailModel != null)
             {
@@ -235,7 +236,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             {
                 description = ChartOptions[_SelectedIndex].RawDescription;
             }
-            SelectedOptionDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_ChartService, description, ChartHyperLinkCommand);
+            SelectedOptionDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_chartService, description, ChartHyperLinkCommand);
         }
     }
 
