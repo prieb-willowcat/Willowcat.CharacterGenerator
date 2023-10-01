@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willowcat.CharacterGenerato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willowcat.CharacterGenerator.UI", "Willowcat.CharacterGenerator.UI\Willowcat.CharacterGenerator.UI.csproj", "{7F4552E9-DA82-4B60-8822-DE42A8D9F81A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willowcat.CharacterGenerator.Model", "Willowcat.CharacterGenerator.Model\Willowcat.CharacterGenerator.Model.csproj", "{4BAC4927-08D7-4A7E-96C7-9C96D3AD366A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Willowcat.CharacterGenerator.Model", "Willowcat.CharacterGenerator.Model\Willowcat.CharacterGenerator.Model.csproj", "{4BAC4927-08D7-4A7E-96C7-9C96D3AD366A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willowcat.CharacterGenerator.Model.Tests", "Willowcat.CharacterGenerator.Model.Tests\Willowcat.CharacterGenerator.Model.Tests.csproj", "{05BBAA59-A906-4497-92D9-BEA3B876A8F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4BAC4927-08D7-4A7E-96C7-9C96D3AD366A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BAC4927-08D7-4A7E-96C7-9C96D3AD366A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BAC4927-08D7-4A7E-96C7-9C96D3AD366A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05BBAA59-A906-4497-92D9-BEA3B876A8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05BBAA59-A906-4497-92D9-BEA3B876A8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05BBAA59-A906-4497-92D9-BEA3B876A8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05BBAA59-A906-4497-92D9-BEA3B876A8F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

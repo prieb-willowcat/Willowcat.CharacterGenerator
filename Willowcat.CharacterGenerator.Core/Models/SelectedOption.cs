@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Models
 {

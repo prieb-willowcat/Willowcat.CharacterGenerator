@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model
 {
     public struct DiceRange
     {
-        private readonly static Regex _RangePattern = new Regex(@"(\-?\d+)-?(\d+)?");
+        private readonly static Regex _rangePattern = new(@"^(\-?\d+)(?:-(\-?\d+))?$");
 
         public int End;
         public int Start;
@@ -21,7 +21,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
             End = value;
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object? obj)
         {
             if (obj is DiceRange range)
             {
@@ -30,13 +30,13 @@ namespace Willowcat.CharacterGenerator.Core.Models
             return false;
         }
 
-        public override int GetHashCode() => Start * 17 + End;
-        public bool Matches(int result) => result >= Start && result <= End;
+        public override readonly int GetHashCode() => Start * 197 + End;
+
         public static DiceRange Parse(string str)
         {
-            DiceRange result = new DiceRange(0);
+            DiceRange result = new(0);
 
-            Match match = _RangePattern.Match(str);
+            Match match = _rangePattern.Match(str);
             if (match.Success)
             {
                 int start = int.Parse(match.Groups[1].Value);
@@ -47,9 +47,24 @@ namespace Willowcat.CharacterGenerator.Core.Models
                 }
                 result = new DiceRange(start, end);
             }
+            else
+            {
+                throw new FormatException($"'{str}' could not be parsed as {nameof(DiceRange)}. Expected formats are '#-#' or '#'");
+            }
 
             return result;
         }
-        public override string ToString() => (Start == End) ? Start.ToString() : $"{Start}-{End}";
+
+        public override readonly string ToString() => Start == End ? Start.ToString() : $"{Start}-{End}";
+
+        public static bool operator ==(DiceRange left, DiceRange right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(DiceRange left, DiceRange right)
+        {
+            return !(left == right);
+        }
     }
 }

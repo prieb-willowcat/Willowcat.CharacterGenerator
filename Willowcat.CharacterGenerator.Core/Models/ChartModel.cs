@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Models
 {
@@ -85,7 +86,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
             }
         }
 
-        public OptionModel GetOptionForResult(int result) => Options.FirstOrDefault(option => option.Range.Matches(result));
+        public OptionModel GetOptionForResult(int result) => Options.FirstOrDefault(option => option.Range.InsideRange(result));
 
         public SelectedOption GetSelectedOption(int result)
         {

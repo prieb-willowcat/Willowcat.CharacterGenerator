@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Willowcat.CharacterGenerator.Core\Willowcat.CharacterGenerator.Core.csproj" />
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.Model\Willowcat.CharacterGenerator.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
