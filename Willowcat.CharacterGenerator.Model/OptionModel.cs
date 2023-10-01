@@ -9,14 +9,21 @@ namespace Willowcat.CharacterGenerator.Model
     [DebuggerDisplay("{Range} {Description} ({ChartKey})")]
     public class OptionModel
     {
-        public ChartModel Chart { get; set; }
-        public string ChartKey { get; set; }
-        public string Description { get; set; }
-        public ChartModel GoToChart { get; set; }
-        public string GoToChartKey { get; set; }
+        public ChartModel? Chart { get; set; }
+
+        public string ChartKey { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        public ChartModel? GoToChart { get; set; }
+
+        public string? GoToChartKey { get; set; } = string.Empty;
+
         [Key]
-        public Guid OptionId { get; set; } //TODO: change OptionId to int
-        public DiceRange Range { get; set; }
+        public Guid OptionId { get; set; } = Guid.Empty;//TODO: change OptionId to int
+
+        public DiceRange Range { get; set; } = new DiceRange();
+
         public string GetRangeString() => Range.ToString();
 
         public OptionModel()

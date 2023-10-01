@@ -15,7 +15,7 @@ namespace Willowcat.CharacterGenerator.Model
 
         public string CollectionName { get; set; } = string.Empty;
 
-        public string CollectionTag { get; set; } = string.Empty;
+        public string? CollectionTag { get; set; } = string.Empty;
 
         public string FileName { get; set; } = string.Empty;
 
