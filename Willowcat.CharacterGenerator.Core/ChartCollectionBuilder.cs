@@ -9,6 +9,7 @@ using System.Text.Json;
 using Willowcat.CharacterGenerator.Core.Data;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core
 {
