@@ -1,7 +1,7 @@
 ﻿using System;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model.Extension
 {
     public static class DiceExtension
     {
@@ -15,7 +15,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
             return total;
         }
 
-        public static bool InsideRange(this DiceRange @this, int result) 
+        public static bool InsideRange(this DiceRange @this, int result)
             => result >= @this.Start && result <= @this.End;
     }
 }

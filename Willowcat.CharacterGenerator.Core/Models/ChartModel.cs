@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Extension;
 
 namespace Willowcat.CharacterGenerator.Core.Models
 {
