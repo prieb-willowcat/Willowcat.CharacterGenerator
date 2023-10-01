@@ -15,7 +15,6 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
                 if (lines.Any())
                 {
                     result = serializer.Deserialize(businessObject, lines);
-                    result.AcceptChanges();
                 }
             }
             return result;

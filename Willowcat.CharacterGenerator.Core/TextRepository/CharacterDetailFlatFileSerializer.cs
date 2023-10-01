@@ -53,7 +53,6 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
             }
 
             result.Details = details;
-            result.AcceptChanges();
             return result;
         }
 

@@ -4,34 +4,14 @@ using System.Diagnostics;
 namespace Willowcat.CharacterGenerator.Core.Models
 {
     [DebuggerDisplay("{ChartName} - {Range} {Description}")]
-    public class SelectedOption : SaveableModelBase
+    public class SelectedOption
     {
-        public string ChartKey
-        {
-            get => GetProperty<string>();
-            set => SetProperty(value);
-        }
-        public string ChartName
-        {
-            get => GetProperty<string>();
-            set => SetProperty(value);
-        }
-        public string Description
-        {
-            get => GetProperty<string>();
-            set => SetProperty(value);
-        }
+        public string ChartKey { get; set; } = string.Empty;
+        public string ChartName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public Guid Id { get; private set; } = Guid.NewGuid();
-        public string ParentChartKey
-        {
-            get => GetProperty<string>();
-            set => SetProperty(value);
-        }
-        public DiceRange Range
-        {
-            get => GetProperty<DiceRange>();
-            set => SetProperty(value);
-        }
+        public string ParentChartKey { get; set; } = string.Empty;
+        public DiceRange Range { get; set; } = new DiceRange();
 
         public SelectedOption()
         {
@@ -41,6 +21,19 @@ namespace Willowcat.CharacterGenerator.Core.Models
         public SelectedOption(Guid id)
         {
             Id = id;
+        }
+
+        public SelectedOption Clone()
+        {
+            return new SelectedOption()
+            {
+                ChartKey = ChartKey,
+                ChartName = ChartName,
+                Description = Description,
+                Id = Id,
+                ParentChartKey = ParentChartKey,
+                Range = Range
+            };
         }
     }
 }

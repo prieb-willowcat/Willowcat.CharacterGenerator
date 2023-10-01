@@ -9,24 +9,26 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
+using Willowcat.CharacterGenerator.Core;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
     public class CharacterDetailsViewModel : ViewModelBase
     {
-        private readonly CharacterModel _CharacterModel;
-        private readonly ICharacterSerializer _CharacterDetailSerializer;
-        private readonly IEventAggregator _EventAggregator = null;
+        private CharacterModel _originalModel;
+        private CharacterModel _characterModel;
+        private readonly ICharacterSerializer _characterDetailSerializer;
+        private readonly IEventAggregator _eventAggregator = null;
 
         private int _SelectedIndex = -1;
         private string _CurrentFilePath;
 
         public string CharacterName
         {
-            get => _CharacterModel.Name;
+            get => _characterModel.Name;
             set
             {
-                _CharacterModel.Name = value;
+                _characterModel.Name = value;
                 OnPropertyChanged();
                 OnSaveCharacterDetailsExecute();
             }
@@ -40,13 +42,13 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
-        public bool HasUnsavedChanges => _CharacterModel.HasChanges();
+        public bool HasUnsavedChanges => ChangeChecker.HasChanges(_originalModel, _characterModel);
         public string Notes
         {
-            get => _CharacterModel.Notes;
+            get => _characterModel.Notes;
             set
             {
-                _CharacterModel.Notes = value;
+                _characterModel.Notes = value;
                 OnPropertyChanged();
                 OnSaveCharacterDetailsExecute();
             }
@@ -62,10 +64,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         }
         public IList<SelectedOption> DetailOptionCollection
         {
-            get => _CharacterModel.Details; 
+            get => _characterModel.Details; 
             set
             {
-                _CharacterModel.Details = value;
+                _characterModel.Details = value;
                 OnPropertyChanged();
             }
         }
@@ -79,9 +81,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             ICharacterSerializer characterDetailSerializer,
             CharacterModel characterModel = null)
         {
-            _CharacterDetailSerializer = characterDetailSerializer ?? throw new ArgumentNullException(nameof(characterDetailSerializer));
-            _EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            _CharacterModel = characterModel ?? new CharacterModel();
+            _characterDetailSerializer = characterDetailSerializer ?? throw new ArgumentNullException(nameof(characterDetailSerializer));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _characterModel = characterModel ?? new CharacterModel();
+            _originalModel = _characterModel.Clone();
 
             MoveRowDownCommand = new DelegateCommand(OnMoveRowDownExecute);
             MoveRowUpCommand = new DelegateCommand(OnMoveRowUpExecute);
@@ -134,7 +137,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public void OnNavigateToSelectedItemExecute(SelectedOption option)
         {
-            _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
+            _eventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
         }
 
         private async void OnSaveCharacterDetailsExecute() => await SaveCharacterDetailsAsync();
@@ -154,9 +157,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             {
                 Task.Run(() =>
                 {
-                    string details = _CharacterDetailSerializer.Serialize(_CharacterModel);
+                    string details = _characterDetailSerializer.Serialize(_characterModel);
                     File.WriteAllText(filePath, details);
-                    _CharacterModel.AcceptChanges();
+                    _originalModel = _characterModel;
+                    _characterModel = _originalModel.Clone();
                 });
             }
             return Task.FromResult(0);
