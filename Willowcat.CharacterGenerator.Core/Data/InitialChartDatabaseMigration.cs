@@ -241,22 +241,25 @@ namespace Willowcat.CharacterGenerator.Core.Data
             {
                 tags = new Dictionary<string, TagModel>(StringComparer.CurrentCultureIgnoreCase);
             }
-
+                        
             foreach (var chart in charts)
             {
-                foreach (var tagName in chart.ParsedTags)
+                if (chart is FlatFileChartModel flatFileChart)
                 {
-                    TagModel tag = null;
-                    if (!tags.TryGetValue(tagName, out tag))
+                    foreach (var tagName in flatFileChart.ParsedTags)
                     {
-                        tag = new TagModel()
+                        TagModel tag = null;
+                        if (!tags.TryGetValue(tagName, out tag))
                         {
-                            //TagId = tags.Count,
-                            Name = tagName,
-                        };
-                        tags.Add(tagName, tag);
+                            tag = new TagModel()
+                            {
+                                //TagId = tags.Count,
+                                Name = tagName,
+                            };
+                            tags.Add(tagName, tag);
+                        }
+                        chart.Tags.Add(tag);
                     }
-                    chart.Tags.Add(tag);
                 }
                 tags = ExtractTags(chart.SubCharts, tags);
             }

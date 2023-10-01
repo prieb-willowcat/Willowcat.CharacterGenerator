@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Willowcat.CharacterGenerator.Core.Models
 {
     [Table("ChartCollection")]
-    [DebuggerDisplay("{CollectionName} (Charts = {Charts.Count})")]
+    [DebuggerDisplay("{CollectionName} (Number of charts: {Charts.Count})")]
     public class ChartCollectionModel
     {
         public List<ChartModel> Charts { get; private set; } = new List<ChartModel>();

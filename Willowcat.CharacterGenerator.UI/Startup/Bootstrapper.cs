@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
+using System;
 using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Core.Data;
 using Willowcat.CharacterGenerator.Core.TextRepository;
@@ -27,6 +28,7 @@ namespace Willowcat.CharacterGenerator.UI.Startup
             services.AddSingleton<IEventAggregator, EventAggregator>();
             services.AddSingleton<ChartService>();
             services.AddTransient<TagService>(); 
+            services.AddSingleton(new Random());
             return services;
         }
 
@@ -39,6 +41,7 @@ namespace Willowcat.CharacterGenerator.UI.Startup
         private static ServiceCollection RegisterViewModels(this ServiceCollection services)
         {
             services.AddTransient<ChartListViewModel>();
+            services.AddTransient<ChartHistoryViewModel>();
             services.AddTransient<ChartViewModel>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<InitializeDatabaseViewModel>();

@@ -19,10 +19,9 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         private readonly ChartService _ChartService;
         private readonly ICharacterSerializer _CharacterSerializer;
         private readonly IEventAggregator _EventAggregator;
-        private readonly Random _Randomizer = new Random();
 
         private CharacterDetailsViewModel _CharacterDetailsViewModel;
-        private ChartViewModel _ChartViewModel;
+        private ChartHistoryViewModel _ChartHistoryViewModel;
 
         public CharacterDetailsViewModel CharacterDetailsViewModel
         {
@@ -30,30 +29,18 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             private set
             {
                 _CharacterDetailsViewModel = value;
-                if (ChartViewModel != null)
-                {
-                    ChartViewModel.CharacterDetailsViewModel= value;
-                }
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Title));
             }
         }
         public CharacterFileOptions CharacterFileOptions { get; private set; } = new CharacterFileOptions();
         public ChartListViewModel ChartListViewModel { get; private set; }
-        public ChartViewModel ChartViewModel
+        public ChartHistoryViewModel ChartHistoryViewModel
         {
-            get => _ChartViewModel; 
+            get => _ChartHistoryViewModel; 
             set
             {
-                if (_ChartViewModel != null)
-                {
-                    _ChartViewModel.CharacterDetailsViewModel = null;
-                }
-                _ChartViewModel = value;
-                if (_ChartViewModel != null)
-                {
-                    _ChartViewModel.CharacterDetailsViewModel = CharacterDetailsViewModel;
-                }
+                _ChartHistoryViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -74,7 +61,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             IEventAggregator eventAggregator,
             ICharacterSerializer characterSerializer,
             ChartListViewModel chartListViewModel,
-            ChartViewModel chartViewModel)
+            ChartHistoryViewModel chartViewModel)
         {
             _CharacterSerializer = characterSerializer ?? throw new ArgumentNullException(nameof(_CharacterSerializer));
             _ChartService = chartService ?? throw new ArgumentNullException(nameof(_ChartService));
@@ -82,13 +69,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
             CharacterDetailsViewModel = new CharacterDetailsViewModel(_EventAggregator, _CharacterSerializer);
             ChartListViewModel = chartListViewModel ?? throw new ArgumentNullException(nameof(chartListViewModel));
-            ChartViewModel = chartViewModel ?? throw new ArgumentNullException(nameof(chartViewModel));
+            ChartHistoryViewModel = chartViewModel ?? throw new ArgumentNullException(nameof(chartViewModel));
 
             _EventAggregator.GetEvent<ChartSelectedEvent>().Subscribe(OnChartSelectedExecute);
 
             ReloadChartsCommand = new DelegateCommand(OnReloadChartsExecute);
-
-            ChartViewModel.Randomizer = _Randomizer;
         }
 
         public async Task LoadDataAsync()
@@ -143,7 +128,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         public async void OnReloadChartsExecute()
         {
             // TODO: ChartViewModel.Chart.Key; LoadChartsAsync
-            string SelectedChart = ChartViewModel.Chart.Key;
+            string SelectedChart = ChartHistoryViewModel.SelectedChart?.Key;
             await ChartListViewModel.LoadChartsAsync();
             _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(SelectedChart));
         }

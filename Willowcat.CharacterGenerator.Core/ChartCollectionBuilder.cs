@@ -16,7 +16,7 @@ namespace Willowcat.CharacterGenerator.Core
     {
         private readonly ChartFlatFileSerializer _ChartSerializer;
         private readonly Dictionary<string, ChartCollectionModel> _ChartCollectionsByFileName = new Dictionary<string, ChartCollectionModel>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, ChartModel> _Charts = new Dictionary<string, ChartModel>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, FlatFileChartModel> _Charts = new Dictionary<string, FlatFileChartModel>(StringComparer.OrdinalIgnoreCase);
         private readonly HashSet<string> _InvalidChartKeys = new HashSet<string>();
 
         public ChartCollectionBuilder(ChartFlatFileSerializer chartSerializer = null)
@@ -24,7 +24,7 @@ namespace Willowcat.CharacterGenerator.Core
             _ChartSerializer = chartSerializer ?? new ChartFlatFileSerializer();
         }
 
-        private void AddCharts(IEnumerable<ChartModel> charts, string fileName)
+        private void AddCharts(IEnumerable<FlatFileChartModel> charts, string fileName)
         {
             var chartCollection = _ChartCollectionsByFileName[fileName];
 
@@ -36,27 +36,6 @@ namespace Willowcat.CharacterGenerator.Core
                 }
                 _Charts[chart.Key] = chart;
                 chart.Source = fileName;
-            }
-
-            foreach (var chart in charts)
-            {
-                if (!string.IsNullOrEmpty(chart.ParentKey) && _Charts.ContainsKey(chart.ParentKey))
-                {
-                    _Charts[chart.ParentKey].SubCharts.Add(chart);
-                    foreach (var tag in _Charts[chart.ParentKey].ParsedTags)
-                    {
-                        chart.ParsedTags.Add(tag);
-                    }
-                }
-                else
-                {
-                    chartCollection.Charts.Add(chart);
-                }
-
-                if (!string.IsNullOrEmpty(chartCollection.CollectionTag) && !chart.ParsedTags.Any())
-                {
-                    chart.ParsedTags.Add(chartCollection.CollectionTag);
-                }
             }
         }
 
@@ -120,22 +99,22 @@ namespace Willowcat.CharacterGenerator.Core
             }
         }
 
-        public ChartCollectionBuilder AddMythicCharts(DatabaseConfiguration _)
-        {
-            AddCharts(MythicFateChart.GetMythicFateCharts(), "MythicRandomEventCharts");
-            return this;
-        }
+        //public ChartCollectionBuilder AddMythicCharts(DatabaseConfiguration _)
+        //{
+        //    AddCharts(MythicFateChart.GetMythicFateCharts(), "MythicRandomEventCharts");
+        //    return this;
+        //}
 
-        public ChartCollectionBuilder AddNameCharts(DatabaseConfiguration options)
-        {
+        //public ChartCollectionBuilder AddNameCharts(DatabaseConfiguration options)
+        //{
 
-            AddCharts(new[] {
-                RandomNameChart.GetFemaleNameChart(options.BehindTheNameApiKey),
-                RandomNameChart.GetMaleNameChart(options.BehindTheNameApiKey),
-                RandomNameChart.GetElvenNameChart()
-            }, "Names");
-            return this;
-        }
+        //    AddCharts(new[] {
+        //        RandomNameChart.GetFemaleNameChart(options.BehindTheNameApiKey),
+        //        RandomNameChart.GetMaleNameChart(options.BehindTheNameApiKey),
+        //        RandomNameChart.GetElvenNameChart()
+        //    }, "Names");
+        //    return this;
+        //}
 
         private void InitializeFileChartCollections(DatabaseConfiguration options)
         {
@@ -156,7 +135,7 @@ namespace Willowcat.CharacterGenerator.Core
             }
         }
 
-        public Dictionary<string, ChartModel> BuildCharts() => _Charts;
+        public Dictionary<string, FlatFileChartModel> BuildCharts() => _Charts;
 
         public List<ChartCollectionModel> BuildCollections()
         {

@@ -110,7 +110,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
                 LoadFatePercentages();
             }
             Dice = new Dice(1, 100);
-            ClearOptions();
+            this.ClearOptions();
             int start = 1;
             int index = 0;
             foreach (var percentage in _FatePercentages[odds][chaosRank])
@@ -127,18 +127,18 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
                         end = 100;
                     }
                     DiceRange range = new DiceRange(start, end);
-                    AddOption(start, end, GetDescriptionByIndex(index));
+                    this.AddOption(start, end, GetDescriptionByIndex(index));
                     start = end + 1;
                 }
                 index++;
             }
-            AddOption(start, 100, GetDescriptionByIndex(index));
+            this.AddOption(start, 100, GetDescriptionByIndex(index));
         }
 
         private void SetOddsOptions(int chaosRank)
         {
             Dice = new Dice(1, 11);
-            ClearOptions();
+            this.ClearOptions();
 
             int index = 1;
             foreach (var odds in Enum.GetValues(typeof(MythicFateOdds)))

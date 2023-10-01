@@ -1,35 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Willowcat.CharacterGenerator.Core.Randomizer;
-using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Models
 {
     public class RandomNameChart : ChartModel
     {
-        private readonly INameGenerator _NameGenerator = null;
+        public INameGenerator NameGenerator { get; private set; } = null;
 
-        public override bool CanDynamicallyGenerateOptions { get; protected set; } = true;
+        public Dictionary<string, string> Regions { get; private set; } = new Dictionary<string, string>();
 
-        public override bool ShowRegionSelector { get; protected set; } = true;
+        public bool ShowRegionSelector { get; protected set; } = false;
 
         protected RandomNameChart(NameCategory nameCategory, string apiKey = null)
         {
             switch (nameCategory)
             {
                 case NameCategory.Elvish:
-                    _NameGenerator = new RandomElvenNames();
+                    NameGenerator = new RandomElvenNames();
                     ShowRegionSelector = false;
                     break;
 
                 case NameCategory.Human_Female:
-                    _NameGenerator = new RandomBehindTheName(apiKey, Gender.Female, 18);
+                    NameGenerator = new RandomBehindTheName(apiKey, Gender.Female, 18);
                     ShowRegionSelector = true;
                     break;
 
                 case NameCategory.Human_Male:
-                    _NameGenerator = new RandomBehindTheName(apiKey, Gender.Male, 18);
+                    NameGenerator = new RandomBehindTheName(apiKey, Gender.Male, 18);
                     ShowRegionSelector = true;
                     break;
             }
@@ -42,10 +39,10 @@ namespace Willowcat.CharacterGenerator.Core.Models
                 }
             }
 
-            ParsedTags = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase)
-            {
-                "Names"
-            };
+            //ParsedTags = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase)
+            //{
+            //    "Names"
+            //};
             Source = "Names";
         }
 
@@ -74,47 +71,6 @@ namespace Willowcat.CharacterGenerator.Core.Models
                 Key = "names-male",
                 ChartName = "Male Names"
             };
-        }
-
-        public override async Task GenerateOptionsAsync(Random randomizer, string selection)
-        {
-            if (_NameGenerator != null)
-            {
-                var names = await _NameGenerator.GetNamesAsync(selection);
-                LoadOptions(names);
-            }
-        }
-
-        public override void LoadSavedOptions(string selection = null)
-        {
-            if (_NameGenerator != null)
-            {
-                var names = _NameGenerator.GetSavedNames(selection);
-                LoadOptions(names);
-            }
-        }
-
-        private void LoadOptions(IEnumerable<string> names)
-        {
-            ClearOptions();
-            int i = 0;
-            foreach (var name in names)
-            {
-                if (!string.IsNullOrWhiteSpace(name))
-                {
-                    i++;
-                    AddOption(i, i, name);
-                }
-            }
-
-            if (i > 0)
-            {
-                Dice = new Dice(1, i);
-            }
-            else
-            {
-                Dice = new Dice(1, 10);
-            }
         }
     }
 }

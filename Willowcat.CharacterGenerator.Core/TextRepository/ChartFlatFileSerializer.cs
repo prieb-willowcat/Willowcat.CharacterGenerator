@@ -30,18 +30,18 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
         };
 
 
-        public List<ChartModel> Deserialize(string source, string text)
+        public List<FlatFileChartModel> Deserialize(string source, string text)
         {
             return Deserialize(source, text.Split('\n'));
         }
 
-        public List<ChartModel> Deserialize(string source, IEnumerable<string> lines)
+        public List<FlatFileChartModel> Deserialize(string source, IEnumerable<string> lines)
         {
-            List<ChartModel> result = new List<ChartModel>();
+            List<FlatFileChartModel> result = new();
             int index = 0;
 
             State currentState = State.Key;
-            ChartModel currentModel = null;
+            FlatFileChartModel currentModel = null;
 
             foreach (var line in lines)
             {
@@ -156,14 +156,14 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
             return line.StartsWith(_NotesKey);
         }
 
-        private (State nextState, ChartModel model) ProcessLine(State currentState, ChartModel currentModel, string line)
+        private (State nextState, FlatFileChartModel model) ProcessLine(State currentState, FlatFileChartModel currentModel, string line)
         {
             State nextState = currentState;
 
             switch (currentState)
             {
                 case State.Key:
-                    currentModel = new ChartModel();
+                    currentModel = new FlatFileChartModel();
                     ExtractKey(line, currentModel);
                     nextState = _NextState[currentState];
                     break;

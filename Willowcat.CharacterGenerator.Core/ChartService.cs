@@ -223,21 +223,5 @@ namespace Willowcat.CharacterGenerator.Core
             }
             return Result;
         }
-
-        public async Task<IEnumerable<ChartCollectionModel>> LoadChartCollections(DatabaseConfiguration options)
-        {
-            await Task.Run(() =>
-            {
-                ChartCollectionBuilder builder = new ChartCollectionBuilder(_ChartSerializer);
-                builder
-                    .AddChartsFromResources(options)
-                    .AddNameCharts(options)
-                    .AddMythicCharts(options);
-                ParentChartCollections = builder.BuildCollections();
-                Charts = builder.BuildCharts();
-            });
-
-            return ParentChartCollections;
-        }
     }
 }

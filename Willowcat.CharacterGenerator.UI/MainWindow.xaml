@@ -84,7 +84,7 @@
             <view:ChartView
                 Grid.Column="1"
                 Margin="5 0 5 0"
-                DataContext="{Binding ChartViewModel}" />
+                DataContext="{Binding ChartHistoryViewModel}" />
 
             <view:ChartListView
                 Grid.Column="2"

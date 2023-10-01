@@ -1,7 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
 using Willowcat.CharacterGenerator.UI.Commands;
 using Willowcat.CharacterGenerator.UI.Data;
@@ -17,36 +17,21 @@ using Willowcat.Common.UI.ViewModels;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
+
     public class ChartViewModel : ViewModelBase
     {
+        private readonly ChartModel _Chart = null;
         private readonly ChartService _ChartService = null;
         private readonly IEventAggregator _EventAggregator = null;
 
-        private readonly Stack<string> _NextCharts = new Stack<string>();
-        private readonly Stack<string> _PreviousCharts = new Stack<string>();
-
         private bool _IsProcessRunning = false;
-        private CharacterDetailsViewModel _CharacterDetailsViewModel;
-        private ChartModel _Chart = null;
         private int _SelectedIndex = -1;
         private int? _Result = null;
         private int? _Modifier = null;
         private FlowDocument _ChartDescriptionDocument = null;
         private FlowDocument _SelectedOptionDescriptionDocument = null;
-        private ObservableCollection<RegionOption> _RegionOptions = new ObservableCollection<RegionOption>();
-        private RegionOption _SelectedRegion = null;
 
-        public bool CanDynamicallyGenerateOptions => _Chart?.CanDynamicallyGenerateOptions ?? false;
-
-        public CharacterDetailsViewModel CharacterDetailsViewModel
-        {
-            get => _CharacterDetailsViewModel;
-            set
-            {
-                _CharacterDetailsViewModel = value;
-                OnPropertyChanged();
-            }
-        }
+        public virtual bool CanDynamicallyGenerateOptions => false;
 
         public ChartModel Chart => _Chart;
 
@@ -60,27 +45,17 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public string ChartDice
-        {
-            get => _Chart?.Dice.ToString() ?? string.Empty;
-        }
+        public string ChartDice => _Chart?.Dice.ToString() ?? string.Empty;
 
         public ICommand ChartHyperLinkCommand { get; private set; }
 
         public string ChartLocationString => string.Join(" > ", _ChartService.GetChartHierarchyPath(_Chart));
 
-        public string ChartName
-        {
-            get => _Chart?.ChartName ?? "Chart";
-        }
+        public string ChartName => _Chart?.ChartName ?? "Chart";
 
         public ObservableCollection<ChartOptionDetailModel> ChartOptions { get; private set; } = new ObservableCollection<ChartOptionDetailModel>();
 
         public AsyncCommand GenerateOptionsCommand { get; private set; }
-
-        public DelegateCommand GoToNextCommand { get; private set; }
-
-        public DelegateCommand GoToPreviousCommand { get; private set; }
 
         public bool IsProcessRunning
         {
@@ -91,6 +66,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public string Key => _Chart?.Key;
 
         public int? Modifier
         {
@@ -104,16 +81,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public Random Randomizer { get; set; }
 
-        public ObservableCollection<RegionOption> RegionOptions
-        {
-            get => _RegionOptions;
-            set
-            {
-                _RegionOptions = value;
-                OnPropertyChanged();
-            }
-        }
-
         public int? Result
         {
             get => _Result;
@@ -124,23 +91,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
+        public virtual ObservableCollection<RegionOption> RegionOptions { get; set; } = null;
+
         public ICommand RollCommand { get; private set; }
 
-        public RegionOption SelectedRegion
-        {
-            get => _SelectedRegion;
-            set
-            {
-                _SelectedRegion = value;
-                if (value != null)
-                {
-                    Properties.Settings.Default.LastRegionSelected = value.Key;
-                    Properties.Settings.Default.Save();
-                    _Chart.LoadSavedOptions(value.Key);
-                }
-                OnPropertyChanged();
-            }
-        }
+        public virtual RegionOption SelectedRegion { get; set; } = null;
 
         public int SelectedIndex
         {
@@ -163,23 +118,25 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public bool ShowRegionSelector => _Chart?.ShowRegionSelector ?? false;
+        public virtual bool ShowRegionSelector => false;
 
         public ICommand UseSelectionCommand { get; private set; }
 
-        public ChartViewModel(ChartService chartService, IEventAggregator eventAggregator)
+        public ChartViewModel(ChartModel chart, ChartService chartService, IEventAggregator eventAggregator)
         {
+            _Chart = chart;
             _ChartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
             _EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
             ChartHyperLinkCommand = new DelegateCommand<string>(OnChartHyperLinkExecute);
-            GoToNextCommand = new DelegateCommand(OnGoToNextExecute, OnGoToNextCanExecute);
-            GoToPreviousCommand = new DelegateCommand(OnGoToPreviousExecute, OnGoToPreviousCanExecute);
             GenerateOptionsCommand = new AsyncCommand(OnGenerateOptionsExecute, OnGenerateOptionsCanExecute);
             RollCommand = new DelegateCommand(OnRollExecute);
             UseSelectionCommand = new DelegateCommand(OnUseSelectionExecute);
+        }
 
-            _EventAggregator.GetEvent<ChartSelectedEvent>().Subscribe(OnChartSelectedEvent);
+        protected virtual Task GenerateOptionsAsync(Random randomizer)
+        {
+            return Task.CompletedTask;
         }
 
         private void OnChartHyperLinkExecute(string chartKey)
@@ -187,84 +144,26 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(chartKey));
         }
 
-        private void OnChartSelectedEvent(ChartSelectedEventArgs args)
-        {
-            UpdateNavigationHistory(args);
-
-            _Chart = _ChartService.GetChart(args.ChartKey);
-
-            Modifier = null;
-            Result = null;
-            if (_Chart != null)
-            {
-                RefreshOptions();
-                RefreshChart(args.Range);
-            }
-            else
-            {
-                ChartDescriptionDocument = null;
-                SelectedOptionDescriptionDocument = null;
-            }
-
-            OnPropertyChanged(nameof(ChartDice));
-            OnPropertyChanged(nameof(ChartName));
-            OnPropertyChanged(nameof(ChartLocationString));
-            OnPropertyChanged(nameof(ShowRegionSelector));
-            OnPropertyChanged(nameof(CanDynamicallyGenerateOptions));
-            GenerateOptionsCommand.RaiseCanExecuteChanged();
-        }
-
-        private bool OnGenerateOptionsCanExecute() => _Chart?.CanDynamicallyGenerateOptions ?? false;
+        private bool OnGenerateOptionsCanExecute() => CanDynamicallyGenerateOptions;
 
         private async Task OnGenerateOptionsExecute()
         {
-            try
+            if (CanDynamicallyGenerateOptions)
             {
-                if (_Chart.CanDynamicallyGenerateOptions)
+                try
                 {
                     IsProcessRunning = true;
-                    await _Chart.GenerateOptionsAsync(Randomizer, _SelectedRegion?.Key);
-                    RefreshChart();
+                    await GenerateOptionsAsync(Randomizer);
                     OnPropertyChanged(nameof(ChartDice));
                 }
-            }
-            //catch (Exception ex)
-            //{
-            //    ShowError(ex);
-            //}
-            finally
-            {
-                IsProcessRunning = false;
-            }
-        }
-
-        private bool OnGoToNextCanExecute() => _NextCharts.Any();
-
-        private void OnGoToNextExecute()
-        {
-            if (_NextCharts.Any())
-            {
-                if (_Chart != null)
+                //catch (Exception ex)
+                //{
+                //    ShowError(ex);
+                //}
+                finally
                 {
-                    _PreviousCharts.Push(_Chart.Key);
+                    IsProcessRunning = false;
                 }
-                string nextChartKey = _NextCharts.Pop();
-                _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(nextChartKey, false));
-            }
-        }
-
-        private bool OnGoToPreviousCanExecute() => _PreviousCharts.Any();
-
-        private void OnGoToPreviousExecute()
-        {
-            if (_PreviousCharts.Any())
-            {
-                if (_Chart != null)
-                {
-                    _NextCharts.Push(_Chart.Key);
-                }
-                string previousChartKey = _PreviousCharts.Pop();
-                _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(previousChartKey, false));
             }
         }
 
@@ -278,17 +177,22 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        private async void OnUseSelectionExecute()
+        private void OnUseSelectionExecute()
         {
-            if (CharacterDetailsViewModel != null && SelectedIndex >= 0 && SelectedIndex < ChartOptions.Count)
+            if (SelectedIndex >= 0 && SelectedIndex < ChartOptions.Count)
             {
                 Guid selectedId = ChartOptions[SelectedIndex].OptionId;
                 var selectedOption = _Chart.GetSelectedOption(selectedId);
-                await CharacterDetailsViewModel.AddCharacterDetailAsync(selectedOption);
+                _EventAggregator.GetEvent<OptionSelectedEvent>().Publish(new OptionSelectedEventArgs(selectedOption));
             }
         }
 
-        private void RefreshChart(int? valueToSelect = null)
+        public virtual void Initialize(int? selectedValue) 
+        {
+            InitializeOptions(selectedValue);
+        }
+
+        protected void InitializeOptions(int? selectedValue)
         {
             ChartOptions.Clear();
             if (_Chart != null)
@@ -298,37 +202,12 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                     ChartOptions.Add(new ChartOptionDetailModel(_ChartService, _EventAggregator, option));
                 }
                 ChartDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_ChartService, _Chart.Notes, ChartHyperLinkCommand);
-                if (valueToSelect.HasValue)
+                if (selectedValue.HasValue)
                 {
-                    SelectResult(valueToSelect.Value);
+                    SelectResult(selectedValue.Value);
                 }
             }
         }
-
-        private void RefreshOptions()
-        {
-            ObservableCollection<RegionOption> newRegionOptions = new ObservableCollection<RegionOption>();
-            RegionOption selectedRegionOption = null;
-
-            if (ShowRegionSelector && _Chart.Regions != null)
-            {
-                string lastRegionSelected = Properties.Settings.Default.LastRegionSelected;
-
-                foreach (var kvp in _Chart.Regions)
-                {
-                    var option = new RegionOption(kvp.Key, kvp.Value);
-                    newRegionOptions.Add(option);
-                    if (kvp.Key == lastRegionSelected)
-                    {
-                        selectedRegionOption = option;
-                    }
-                }
-                _Chart.LoadSavedOptions(SelectedRegion?.Key);
-            }
-
-            RegionOptions = newRegionOptions;
-            SelectedRegion = selectedRegionOption;
-        } 
 
         private void SelectResult(int result)
         {
@@ -357,22 +236,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 description = ChartOptions[_SelectedIndex].RawDescription;
             }
             SelectedOptionDescriptionDocument = RichTextStringFormatters.AddLocalLinksToChartKeysDocument(_ChartService, description, ChartHyperLinkCommand);
-        }
-
-        private void UpdateNavigationHistory(ChartSelectedEventArgs args)
-        {
-            if (args.ResetNavigationHistory)
-            {
-                _NextCharts.Clear();
-
-                if (_Chart != null)
-                {
-                    _PreviousCharts.Push(_Chart.Key);
-                }
-            }
-
-            GoToNextCommand.RaiseCanExecuteChanged();
-            GoToPreviousCommand.RaiseCanExecuteChanged();
         }
     }
 

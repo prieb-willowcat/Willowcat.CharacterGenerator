@@ -10,6 +10,7 @@ using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Model;
+using System.Collections.ObjectModel;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
@@ -22,6 +23,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private int _SelectedIndex = -1;
         private string _CurrentFilePath;
+        private ObservableCollection<SelectedOption> _detailOptionCollection = new ObservableCollection<SelectedOption>();
 
         public string CharacterName
         {
@@ -62,16 +64,15 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
-        public IList<SelectedOption> DetailOptionCollection
+        public ObservableCollection<SelectedOption> DetailOptionCollection
         {
-            get => _characterModel.Details; 
-            set
+            get => _detailOptionCollection; 
+            private set
             {
-                _characterModel.Details = value;
+                _detailOptionCollection = value;
                 OnPropertyChanged();
             }
         }
-
         public ICommand MoveRowDownCommand { get; private set; }
         public ICommand MoveRowUpCommand { get; private set; }
         public ICommand SaveCharacterDetailsCommand { get; private set; }
@@ -86,9 +87,18 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             _characterModel = characterModel ?? new CharacterModel();
             _originalModel = _characterModel.Clone();
 
+            DetailOptionCollection = new ObservableCollection<SelectedOption>(_characterModel.Details);
+
             MoveRowDownCommand = new DelegateCommand(OnMoveRowDownExecute);
             MoveRowUpCommand = new DelegateCommand(OnMoveRowUpExecute);
             SaveCharacterDetailsCommand = new DelegateCommand(OnSaveCharacterDetailsExecute);
+
+            _eventAggregator.GetEvent<OptionSelectedEvent>().Subscribe(AddSelectedOptionEvent);
+        }
+
+        private async void AddSelectedOptionEvent(OptionSelectedEventArgs args)
+        {
+            await AddCharacterDetailAsync(args.SelectedOption);
         }
 
         public async Task AddCharacterDetailAsync(SelectedOption selectedOption)
@@ -104,11 +114,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         {
             if (index >= 0 && index < DetailOptionCollection.Count)
             {
-                DetailOptionCollection.Insert(index + 1, detail);
+                Insert(index + 1, detail);
             }
             else
             {
-                DetailOptionCollection.Add(detail);
+                Add(detail);
             }
         }
 
@@ -122,8 +132,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 if (newIndex >= 0 && newIndex < DetailOptionCollection.Count)
                 {
                     var item = DetailOptionCollection[currentIndex];
-                    DetailOptionCollection.Remove(item);
-                    DetailOptionCollection.Insert(newIndex, item);
+                    Remove(item);
+                    Insert(newIndex, item);
 
                     SelectedIndex = newIndex;
                     OnSaveCharacterDetailsExecute();
@@ -161,9 +171,27 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                     File.WriteAllText(filePath, details);
                     _originalModel = _characterModel;
                     _characterModel = _originalModel.Clone();
+                    DetailOptionCollection = new ObservableCollection<SelectedOption>(_characterModel.Details);
                 });
             }
             return Task.FromResult(0);
+        }
+
+        // TODO: handle keeping collections in sync differently
+        private void Add(SelectedOption option)
+        {
+            DetailOptionCollection.Add(option);
+            _characterModel.Details.Add(option);
+        }
+        private void Insert(int index, SelectedOption option)
+        {
+            DetailOptionCollection.Insert(index, option);
+            _characterModel.Details.Insert(index, option);
+        }
+        private void Remove(SelectedOption option)
+        {
+            DetailOptionCollection.Remove(option);
+            _characterModel.Details.Remove(option);
         }
     }
 }

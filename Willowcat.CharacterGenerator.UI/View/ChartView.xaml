@@ -42,13 +42,13 @@
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
-            <TextBlock Text="{Binding ChartLocationString}" Foreground="Gray" />
-            <TextBlock Text="{Binding ChartName}" FontSize="18" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedChart.ChartLocationString}" Foreground="Gray" />
+            <TextBlock Text="{Binding SelectedChart.ChartName}" FontSize="18" FontWeight="Bold" />
         </StackPanel>
 
         <!--<TextBox Grid.Row="2" Text="{Binding ChartDescription}" IsReadOnly="True" />-->
         <FlowDocumentScrollViewer Grid.Row="2"
-                                  Document="{Binding ChartDescriptionDocument}"
+                                  Document="{Binding SelectedChart.ChartDescriptionDocument}"
                                   VerticalScrollBarVisibility="Auto"/>
 
         <Grid Grid.Row="3">
@@ -62,41 +62,40 @@
                 Grid.Column="0"
                 Margin="5" Padding="5 0"
                 Content="Generate Options" 
-                Command="{Binding GenerateOptionsCommand}" 
-                Visibility="{Binding CanDynamicallyGenerateOptions,Converter={StaticResource BooleanToVisibilityConverter}}"
+                Command="{Binding SelectedChart.GenerateOptionsCommand}" 
+                Visibility="{Binding SelectedChart.CanDynamicallyGenerateOptions,Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <ComboBox 
                 Grid.Column="1"
                 Margin="5" Padding="5 0"
-                ItemsSource="{Binding RegionOptions}"
-                SelectedValue="{Binding SelectedRegion}"
-                Visibility="{Binding ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}"
-            >
+                ItemsSource="{Binding SelectedChart.RegionOptions}"
+                SelectedValue="{Binding SelectedChart.SelectedRegion}"
+                Visibility="{Binding SelectedChart.ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Description}" />
+                        <TextBlock Text="{Binding SelectedChart.Description}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
 
             <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Label Content="{Binding ChartDice}" />
+                <Label Content="{Binding SelectedChart.ChartDice}" />
                 <TextBlock Text="+" Margin="5" />
-                <TextBox Text="{Binding Modifier}" Width="100" Margin="5" />
+                <TextBox Text="{Binding SelectedChart.Modifier}" Width="100" Margin="5" />
                 <TextBlock Text="=" Margin="5" />
-                <TextBox Text="{Binding Result}" Width="100" IsReadOnly="True" Margin="5" />
-                <Button Content="Roll" Command="{Binding RollCommand}" Margin="5" Padding="5 0"/>
-                <Button Content="Use Selection" Command="{Binding UseSelectionCommand}" Margin="5 5 0 5" Padding="5 0"/>
+                <TextBox Text="{Binding SelectedChart.Result}" Width="100" IsReadOnly="True" Margin="5" />
+                <Button Content="Roll" Command="{Binding SelectedChart.RollCommand}" Margin="5" Padding="5 0"/>
+                <Button Content="Use Selection" Command="{Binding SelectedChart.UseSelectionCommand}" Margin="5 5 0 5" Padding="5 0"/>
             </StackPanel>
         </Grid>
 
-        <DataGrid Grid.Row="4" ItemsSource="{Binding ChartOptions}" SelectedIndex="{Binding SelectedIndex}" 
+        <DataGrid Grid.Row="4" ItemsSource="{Binding SelectedChart.ChartOptions}" SelectedIndex="{Binding SelectedChart.SelectedIndex}" 
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   FontSize="14"
-                  Cursor="{Binding IsProcessRunning,Converter={StaticResource BooleanToCursorValueConverter}}">
+                  Cursor="{Binding SelectedChart.IsProcessRunning,Converter={StaticResource BooleanToCursorValueConverter}}">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
                     <EventSetter Event="MouseDoubleClick" Handler="DataGridCell_MouseDoubleClick" />
@@ -126,6 +125,6 @@
 
         <FlowDocumentScrollViewer Grid.Row="5"
                                   Margin="0 5"
-                                  Document="{Binding SelectedOptionDescriptionDocument}" />
+                                  Document="{Binding SelectedChart.SelectedOptionDescriptionDocument}" />
     </Grid>
 </UserControl>
