@@ -1,7 +1,4 @@
-﻿using System;
-using Willowcat.CharacterGenerator.Model;
-
-namespace Willowcat.CharacterGenerator.Model.Extension
+﻿namespace Willowcat.CharacterGenerator.Model.Extension
 {
     public static class DiceExtension
     {

@@ -52,7 +52,7 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
                     currentModel.Source = source;
                     if (currentModel.Dice.DiceSides == 0)
                     {
-                        currentModel.Dice = currentModel.GestimateDice();
+                        currentModel.Dice = GestimateDice(currentModel);
                     }
                     result.Add(currentModel);
                     index++;
@@ -149,6 +149,18 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
                 }
             }
             return option;
+        }
+
+        public static Dice GestimateDice(ChartModel @this)
+        {
+            if (@this.Options.Any())
+            {
+                return new Dice(1, @this.Options.Max(x => x.Range.End));
+            }
+            else
+            {
+                return new Dice();
+            }
         }
 
         private bool IsNote(string line)

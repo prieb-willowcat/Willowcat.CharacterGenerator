@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
@@ -103,7 +104,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private void LoadOptions(IEnumerable<string> names)
         {
-            _randomNameChart.ClearOptions();
+            _randomNameChart.Options.Clear();
             int i = 0;
             foreach (var name in names)
             {

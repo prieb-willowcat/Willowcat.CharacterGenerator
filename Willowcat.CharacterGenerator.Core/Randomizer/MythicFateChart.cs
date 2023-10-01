@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Extension;
 
 namespace Willowcat.CharacterGenerator.Core.Randomizer
 {
@@ -110,7 +110,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
                 LoadFatePercentages();
             }
             Dice = new Dice(1, 100);
-            this.ClearOptions();
+            Options.Clear();
             int start = 1;
             int index = 0;
             foreach (var percentage in _FatePercentages[odds][chaosRank])
@@ -138,7 +138,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         private void SetOddsOptions(int chaosRank)
         {
             Dice = new Dice(1, 11);
-            this.ClearOptions();
+            Options.Clear();
 
             int index = 1;
             foreach (var odds in Enum.GetValues(typeof(MythicFateOdds)))
