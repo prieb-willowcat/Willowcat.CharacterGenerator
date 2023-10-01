@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core.Data;
 using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
 
 namespace Willowcat.CharacterGenerator.Core

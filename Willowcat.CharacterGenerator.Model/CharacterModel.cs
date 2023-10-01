@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model
 {
     [DebuggerDisplay("{Name} (Details Count = {Details.Count})")]
     public class CharacterModel

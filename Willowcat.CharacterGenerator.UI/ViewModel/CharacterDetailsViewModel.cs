@@ -1,5 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using Willowcat.CharacterGenerator.Core.TextRepository;
+﻿using Willowcat.CharacterGenerator.Core.TextRepository;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -10,6 +9,7 @@ using System.Windows.Input;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {

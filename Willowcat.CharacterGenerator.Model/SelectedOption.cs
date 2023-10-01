@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model
 {
     [DebuggerDisplay("{ChartName} - {Range} {Description}")]
     public class SelectedOption

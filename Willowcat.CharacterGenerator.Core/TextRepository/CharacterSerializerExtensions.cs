@@ -1,6 +1,6 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.TextRepository
 {

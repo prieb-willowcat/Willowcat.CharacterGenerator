@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.TextRepository
 {
