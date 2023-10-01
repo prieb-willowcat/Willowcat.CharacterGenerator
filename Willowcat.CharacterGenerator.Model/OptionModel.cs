@@ -2,9 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model
 {
     [Table("ChartOption")]
     [DebuggerDisplay("{Range} {Description} ({ChartKey})")]

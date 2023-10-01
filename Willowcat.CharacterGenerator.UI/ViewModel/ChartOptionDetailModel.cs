@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.UI.Data;
 using Willowcat.Common.UI.ViewModels;
 
