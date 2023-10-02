@@ -17,7 +17,7 @@ namespace Willowcat.CharacterGenerator.Model
 
         public ChartModel? GoToChart { get; set; }
 
-        public string? GoToChartKey { get; set; } = string.Empty;
+        public string? GoToChartKey { get; set; } 
 
         [Key]
         public Guid OptionId { get; set; } = Guid.Empty;//TODO: change OptionId to int

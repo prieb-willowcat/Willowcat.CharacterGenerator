@@ -11,6 +11,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         {
             Key = FormatChartKey(chaosRank);
             ChartName = $"Chaos Rank {chaosRank}";
+            Source = "MythicRandomEventCharts";
             SetOddsOptions(chaosRank);
         }
 
@@ -18,7 +19,8 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         {
             Key = FormatChartKey(chaosRank, odds);
             ParentKey = FormatChartKey(chaosRank);
-            ChartName = GetDescriptionByOdds(odds);            
+            ChartName = GetDescriptionByOdds(odds);
+            Source = "MythicRandomEventCharts";
             SetFatePercentageOptions(chaosRank, odds);
         }
 
@@ -50,20 +52,6 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
             };
         }
 
-        public static IEnumerable<MythicFateChart> GetMythicFateCharts()
-        {
-            List<MythicFateChart> charts = new List<MythicFateChart>();
-            for (int chaosRank = 1; chaosRank <= 9; chaosRank++)
-            {
-                charts.Add(new MythicFateChart(chaosRank));
-                foreach (var odds in Enum.GetValues(typeof(MythicFateOdds)))
-                {
-                    charts.Add(new MythicFateChart(chaosRank, (MythicFateOdds)odds));
-                }
-            }
-            return charts;
-        }
-
         private OptionModel GetOddsOptionModel(int chaosRank, MythicFateOdds odds, int index)
         {
             return new OptionModel(Key, Guid.NewGuid(), GetDescriptionByOdds(odds))
@@ -75,7 +63,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
 
         private string FormatChartKey(int chaosRank, MythicFateOdds? odds = null)
         {
-            return odds.HasValue ? $"Mythic_{chaosRank}_{odds}" : $"Mythic_{chaosRank}";
+            return odds.HasValue ? $"MythicFate_{chaosRank}_{odds}" : $"MythicFate_{chaosRank}";
         } 
 
         private static void LoadFatePercentages()
@@ -145,20 +133,5 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
             }
         }
 
-    }
-
-    public enum MythicFateOdds
-    {
-        Impossible, 
-        NoWay, 
-        VeryUnlikely, 
-        Unlikely,
-        EvenOdds, 
-        SomewhatLikely, 
-        Likely, 
-        VeryLikely, 
-        NearSureThing, 
-        SureThing, 
-        HasToBe
     }
 }
