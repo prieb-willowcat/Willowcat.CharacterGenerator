@@ -1,5 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using Willowcat.CharacterGenerator.Core.TextRepository;
+﻿using Willowcat.CharacterGenerator.Core.TextRepository;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -9,24 +8,29 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
+using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Model;
+using System.Collections.ObjectModel;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
     public class CharacterDetailsViewModel : ViewModelBase
     {
-        private readonly CharacterModel _CharacterModel;
-        private readonly ICharacterSerializer _CharacterDetailSerializer;
-        private readonly IEventAggregator _EventAggregator = null;
+        private CharacterModel _originalModel;
+        private CharacterModel _characterModel;
+        private readonly ICharacterSerializer _characterDetailSerializer;
+        private readonly IEventAggregator _eventAggregator = null;
 
         private int _SelectedIndex = -1;
         private string _CurrentFilePath;
+        private ObservableCollection<SelectedOption> _detailOptionCollection = new ObservableCollection<SelectedOption>();
 
         public string CharacterName
         {
-            get => _CharacterModel.Name;
+            get => _characterModel.Name;
             set
             {
-                _CharacterModel.Name = value;
+                _characterModel.Name = value;
                 OnPropertyChanged();
                 OnSaveCharacterDetailsExecute();
             }
@@ -40,13 +44,13 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
-        public bool HasUnsavedChanges => _CharacterModel.HasChanges();
+        public bool HasUnsavedChanges => ChangeChecker.HasChanges(_originalModel, _characterModel);
         public string Notes
         {
-            get => _CharacterModel.Notes;
+            get => _characterModel.Notes;
             set
             {
-                _CharacterModel.Notes = value;
+                _characterModel.Notes = value;
                 OnPropertyChanged();
                 OnSaveCharacterDetailsExecute();
             }
@@ -60,16 +64,15 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
-        public IList<SelectedOption> DetailOptionCollection
+        public ObservableCollection<SelectedOption> DetailOptionCollection
         {
-            get => _CharacterModel.Details; 
-            set
+            get => _detailOptionCollection; 
+            private set
             {
-                _CharacterModel.Details = value;
+                _detailOptionCollection = value;
                 OnPropertyChanged();
             }
         }
-
         public ICommand MoveRowDownCommand { get; private set; }
         public ICommand MoveRowUpCommand { get; private set; }
         public ICommand SaveCharacterDetailsCommand { get; private set; }
@@ -79,13 +82,23 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             ICharacterSerializer characterDetailSerializer,
             CharacterModel characterModel = null)
         {
-            _CharacterDetailSerializer = characterDetailSerializer ?? throw new ArgumentNullException(nameof(characterDetailSerializer));
-            _EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            _CharacterModel = characterModel ?? new CharacterModel();
+            _characterDetailSerializer = characterDetailSerializer ?? throw new ArgumentNullException(nameof(characterDetailSerializer));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _characterModel = characterModel ?? new CharacterModel();
+            _originalModel = _characterModel.Clone();
+
+            DetailOptionCollection = new ObservableCollection<SelectedOption>(_characterModel.Details);
 
             MoveRowDownCommand = new DelegateCommand(OnMoveRowDownExecute);
             MoveRowUpCommand = new DelegateCommand(OnMoveRowUpExecute);
             SaveCharacterDetailsCommand = new DelegateCommand(OnSaveCharacterDetailsExecute);
+
+            _eventAggregator.GetEvent<OptionSelectedEvent>().Subscribe(AddSelectedOptionEvent);
+        }
+
+        private async void AddSelectedOptionEvent(OptionSelectedEventArgs args)
+        {
+            await AddCharacterDetailAsync(args.SelectedOption);
         }
 
         public async Task AddCharacterDetailAsync(SelectedOption selectedOption)
@@ -101,11 +114,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         {
             if (index >= 0 && index < DetailOptionCollection.Count)
             {
-                DetailOptionCollection.Insert(index + 1, detail);
+                Insert(index + 1, detail);
             }
             else
             {
-                DetailOptionCollection.Add(detail);
+                Add(detail);
             }
         }
 
@@ -119,8 +132,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 if (newIndex >= 0 && newIndex < DetailOptionCollection.Count)
                 {
                     var item = DetailOptionCollection[currentIndex];
-                    DetailOptionCollection.Remove(item);
-                    DetailOptionCollection.Insert(newIndex, item);
+                    Remove(item);
+                    Insert(newIndex, item);
 
                     SelectedIndex = newIndex;
                     OnSaveCharacterDetailsExecute();
@@ -134,7 +147,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public void OnNavigateToSelectedItemExecute(SelectedOption option)
         {
-            _EventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
+            _eventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
         }
 
         private async void OnSaveCharacterDetailsExecute() => await SaveCharacterDetailsAsync();
@@ -154,12 +167,31 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             {
                 Task.Run(() =>
                 {
-                    string details = _CharacterDetailSerializer.Serialize(_CharacterModel);
+                    string details = _characterDetailSerializer.Serialize(_characterModel);
                     File.WriteAllText(filePath, details);
-                    _CharacterModel.AcceptChanges();
+                    _originalModel = _characterModel;
+                    _characterModel = _originalModel.Clone();
+                    DetailOptionCollection = new ObservableCollection<SelectedOption>(_characterModel.Details);
                 });
             }
             return Task.FromResult(0);
+        }
+
+        // TODO: handle keeping collections in sync differently
+        private void Add(SelectedOption option)
+        {
+            DetailOptionCollection.Add(option);
+            _characterModel.Details.Add(option);
+        }
+        private void Insert(int index, SelectedOption option)
+        {
+            DetailOptionCollection.Insert(index, option);
+            _characterModel.Details.Insert(index, option);
+        }
+        private void Remove(SelectedOption option)
+        {
+            DetailOptionCollection.Remove(option);
+            _characterModel.Details.Remove(option);
         }
     }
 }

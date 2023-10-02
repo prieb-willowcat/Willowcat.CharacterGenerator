@@ -3,6 +3,7 @@ using Moq;
 using System.Collections.Generic;
 using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Tests
 {

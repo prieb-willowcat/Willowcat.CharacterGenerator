@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
+using System;
+using Willowcat.CharacterGenerator.Application.Extension;
 using Willowcat.CharacterGenerator.Core.TextRepository;
-using Willowcat.CharacterGenerator.UI.ViewModel;
+using Willowcat.CharacterGenerator.EntityFramework.Extension;
+using Willowcat.CharacterGenerator.FlatFile.Extension;
+using Willowcat.CharacterGenerator.OnlineGenerators.Extension;
+using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.Startup
 {
@@ -16,6 +19,10 @@ namespace Willowcat.CharacterGenerator.UI.Startup
             services
                 .RegisterConfigurations()
                 .RegisterAppServices()
+                .RegisterApplicationServices()
+                .RegisterEntityFrameworkServices(builder => builder.UseSqlite($"Data Source={Properties.Settings.Default.DatabaseLocation}"))
+                .RegisterFlatFileServices(() => Properties.Settings.Default.ResourcesDirectory)
+                .RegisterOnlineGenerators(() => Environment.GetEnvironmentVariable("BehindTheNamesApiKey", EnvironmentVariableTarget.User))
                 .RegisterViewModels()
                 .RegisterViews();
             return services.BuildServiceProvider();
@@ -25,23 +32,13 @@ namespace Willowcat.CharacterGenerator.UI.Startup
         {
             services.AddTransient<ICharacterSerializer, CharacterFileSerializer>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
-            services.AddSingleton<ChartService>();
-            services.AddTransient<TagService>(); 
+            services.AddSingleton(new Random());
             return services;
         }
 
         private static ServiceCollection RegisterConfigurations(this ServiceCollection services)
         {
             services.AddSingleton(App.DatabaseConfiguration);
-            return services;
-        }
-
-        private static ServiceCollection RegisterViewModels(this ServiceCollection services)
-        {
-            services.AddTransient<ChartListViewModel>();
-            services.AddTransient<ChartViewModel>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<InitializeDatabaseViewModel>();
             return services;
         }
 

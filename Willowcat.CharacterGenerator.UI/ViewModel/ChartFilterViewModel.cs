@@ -1,5 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using Prism.Events;
+﻿using Prism.Events;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,6 +6,7 @@ using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {

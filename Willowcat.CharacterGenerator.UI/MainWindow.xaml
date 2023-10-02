@@ -64,13 +64,18 @@
                 <!--<ColumnDefinition Width="{Binding ShowDetailView, Converter={StaticResource BooleanToToggleWidthConverter}}" />-->
             </Grid.ColumnDefinitions>
 
-            <GridSplitter Grid.Column="0"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <GridSplitter Grid.Column="0" Grid.RowSpan="2"
                       Background="Black"
                       Width="5"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Stretch" />
 
-            <GridSplitter Grid.Column="2"
+            <GridSplitter Grid.Column="2" Grid.RowSpan="2"
                       Background="Black"
                       Width="5"
                       HorizontalAlignment="Left"
@@ -78,16 +83,25 @@
 
             <view:CharacterDetailsView 
                 Grid.Column="0"
+                Grid.RowSpan="2"
                 Margin="5"
                 DataContext="{Binding CharacterDetailsViewModel}" />
 
+            <view:ChartHistoryView
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="5 0 5 0"
+                DataContext="{Binding ChartHistoryViewModel}" />
+
             <view:ChartView
                 Grid.Column="1"
+                Grid.Row="1"
                 Margin="5 0 5 0"
-                DataContext="{Binding ChartViewModel}" />
+                DataContext="{Binding SelectedChart}" />
 
             <view:ChartListView
                 Grid.Column="2"
+                Grid.RowSpan="2"
                 Margin="5"
                 DataContext="{Binding ChartListViewModel}" />
         </Grid>

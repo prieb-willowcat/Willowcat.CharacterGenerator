@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 

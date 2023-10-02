@@ -6,6 +6,7 @@ using System.Linq;
 using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Core.Tests.Extension;
 using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Tests
 {
@@ -15,7 +16,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
         private readonly ChartFlatFileSerializer _FlatFileSerializer = new ChartFlatFileSerializer();
         private readonly string _Source = "Xanathar";
 
-        public void AssertEquals(ChartModel expected, ChartModel actual)
+        public void AssertEquals(FlatFileChartModel expected, FlatFileChartModel actual)
         {
             Assert.AreEqual(expected.Key, actual.Key, nameof(actual.Key));
             Assert.AreEqual(expected.ChartName, actual.ChartName, nameof(actual.ChartName));
@@ -49,7 +50,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "4\tOption 4" + Environment.NewLine +
                 "5\tOption 5" + Environment.NewLine +
                 "6\tOption 6";
-            ChartModel expected = new ChartModel()
+            FlatFileChartModel expected = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -62,7 +63,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected.Options.Add(5, 5, "Option 5");
             expected.Options.Add(6, 6, "Option 6");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(1, output.Count, "list count");
             
@@ -78,7 +79,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "-2\tReroll" + Environment.NewLine +
                 "-1-4\tOption 1" + Environment.NewLine +
                 "5-6\tOption 2";
-            ChartModel expected = new ChartModel()
+            FlatFileChartModel expected = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -88,7 +89,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected.Options.Add(-1, 4, "Option 1");
             expected.Options.Add(5, 6, "Option 2");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(1, output.Count, "list count");
 
@@ -103,7 +104,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "1d6" + Environment.NewLine +
                 "1-4\tOption 1" + Environment.NewLine +
                 "5-6\tOption 2";
-            ChartModel expected = new ChartModel()
+            FlatFileChartModel expected = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -112,7 +113,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected.Options.Add(1, 4, "Option 1");
             expected.Options.Add(5, 6, "Option 2");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(1, output.Count, "list count");
 
@@ -132,7 +133,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "1d8" + Environment.NewLine +
                 "1-4\tThe Best 1" + Environment.NewLine +
                 "5-8\tThe Worst 2";
-            ChartModel expected1 = new ChartModel()
+            FlatFileChartModel expected1 = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -140,7 +141,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             };
             expected1.Options.Add(1, 4, "Option 1");
             expected1.Options.Add(5, 6, "Option 2");
-            ChartModel expected2 = new ChartModel()
+            FlatFileChartModel expected2 = new FlatFileChartModel()
             {
                 ChartName = "Birthplace",
                 Dice = new Dice(1, 8),
@@ -149,7 +150,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected2.Options.Add(1, 4, "The Best 1");
             expected2.Options.Add(5, 8, "The Worst 2");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(2, output.Count, "list count");
 
@@ -166,7 +167,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "1d6" + Environment.NewLine +
                 "1-4\tOption 1" + Environment.NewLine +
                 "5-6\tOption 2";
-            ChartModel expected = new ChartModel()
+            FlatFileChartModel expected = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -176,7 +177,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected.Options.Add(1, 4, "Option 1");
             expected.Options.Add(5, 6, "Option 2");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(1, output.Count, "list count");
 
@@ -191,7 +192,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
                 "1d6" + Environment.NewLine +
                 "1-4\tOption 1" + Environment.NewLine +
                 "5-7\tOption 2";
-            ChartModel expected = new ChartModel()
+            FlatFileChartModel expected = new FlatFileChartModel()
             {
                 ChartName = "Parents",
                 Dice = new Dice(1, 6),
@@ -200,7 +201,7 @@ namespace Willowcat.CharacterGenerator.Core.Tests
             expected.Options.Add(1, 4, "Option 1");
             expected.Options.Add(5, 7, "Option 2");
 
-            List<ChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
+            List<FlatFileChartModel> output = _FlatFileSerializer.Deserialize(_Source, input);
 
             Assert.AreEqual(1, output.Count, "chart count");
             AssertEquals(expected, output[0]);

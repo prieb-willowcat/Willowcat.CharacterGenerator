@@ -1,7 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using System.Windows.Input;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 

@@ -27,7 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.Application\Willowcat.CharacterGenerator.Application.csproj" />
     <ProjectReference Include="..\Willowcat.CharacterGenerator.Core\Willowcat.CharacterGenerator.Core.csproj" />
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.EntityFramework\Willowcat.CharacterGenerator.EntityFramework.csproj" />
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.FlatFile\Willowcat.CharacterGenerator.FlatFile.csproj" />
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.Model\Willowcat.CharacterGenerator.Model.csproj" />
+    <ProjectReference Include="..\Willowcat.CharacterGenerator.OnlineGenerators\Willowcat.CharacterGenerator.OnlineGenerators.csproj" />
   </ItemGroup>
 
   <ItemGroup>

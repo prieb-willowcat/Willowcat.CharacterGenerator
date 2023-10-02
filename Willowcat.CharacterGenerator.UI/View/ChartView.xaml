@@ -22,24 +22,6 @@
             <RowDefinition Height="100"/>
             <!--<RowDefinition Height="Auto"/>-->
         </Grid.RowDefinitions>
-        
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                Content="🡰" 
-                Command="{Binding GoToPreviousCommand}" 
-                Margin="5" 
-                Padding="5 0"/>
-            <Button Grid.Column="2"
-                Content="🡲" 
-                Command="{Binding GoToNextCommand}" 
-                Margin="5" 
-                Padding="5 0"/>
-        </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <TextBlock Text="{Binding ChartLocationString}" Foreground="Gray" />
@@ -70,8 +52,7 @@
                 Margin="5" Padding="5 0"
                 ItemsSource="{Binding RegionOptions}"
                 SelectedValue="{Binding SelectedRegion}"
-                Visibility="{Binding ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}"
-            >
+                Visibility="{Binding ShowRegionSelector,Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Description}" />

@@ -14,7 +14,7 @@ namespace Willowcat.CharacterGenerator.UI
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private static DatabaseConfiguration _DatabaseConfiguration;
 
@@ -42,9 +42,7 @@ namespace Willowcat.CharacterGenerator.UI
                     }
                     _DatabaseConfiguration = new DatabaseConfiguration()
                     {
-                        BehindTheNameApiKey = behindTheNamesApiKey,
-                        ResourcesDirectory = UI.Properties.Settings.Default.ResourcesDirectory,
-                        DatabaseLocation = UI.Properties.Settings.Default.DatabaseLocation
+                        BehindTheNameApiKey = behindTheNamesApiKey
                     };
                 }
                 return _DatabaseConfiguration;

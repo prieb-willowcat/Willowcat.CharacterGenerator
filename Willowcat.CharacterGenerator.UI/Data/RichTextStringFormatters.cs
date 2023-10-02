@@ -1,10 +1,10 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.UI.Data
 {

@@ -29,7 +29,7 @@
         <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" Width="5" />
 
         <DataGrid Grid.Row="2" Grid.Column="0" 
-                  ItemsSource="{Binding DetailOptionCollection,Mode=TwoWay}" 
+                  ItemsSource="{Binding DetailOptionCollection}" 
                   SelectedIndex="{Binding SelectedIndex}" 
                   x:Name="detailOptionsDataGrid"
                   FontSize="14"                  
