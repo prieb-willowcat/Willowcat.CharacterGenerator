@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Core.Data;
+using Willowcat.CharacterGenerator.EntityFramework.Migration;
 using Willowcat.Common.UI.ViewModels;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
@@ -12,9 +13,9 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
     public class InitializeDatabaseViewModel : ViewModelBase
     {
         private readonly DatabaseConfiguration _Configuration;
+        private readonly DatabaseMigrationService _databaseMigrationService;
         private readonly object _Lock = new object();
         private readonly object _MessageLock = new object();
-        private readonly Progress<ChartSetupMessage> _ProgressReporter = new Progress<ChartSetupMessage>();
 
         private bool _HasError = false;
         private CancellationTokenSource _TokenSource;
@@ -117,10 +118,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             StatusLog = "Willowcat.CharacterGenerator" + Environment.NewLine + StatusMessage;
         }
 
-        public InitializeDatabaseViewModel(DatabaseConfiguration configuration)
+        public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseConfiguration configuration, DatabaseMigrationService databaseMigrationService)
         {
             _Configuration = configuration;
-            _ProgressReporter.ProgressChanged += ProgressReporter_ProgressChanged;
+            _databaseMigrationService = databaseMigrationService;
+            progressReporter.ProgressChanged += ProgressReporter_ProgressChanged;
         }
 
         public void CancelLoad()
@@ -192,21 +194,11 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         private async Task<bool> InitializeDatabaseAsync(CancellationToken cancellationToken)
         {
             bool success = false;
-            //ChartContext.ClearOldDatabase(_Configuration.DatabaseLocation);
-            using (ChartContext context = new ChartContext(_Configuration))
+            //DatabaseMigrationService.ClearOldDatabase(_Configuration.DatabaseLocation);
+            if (await _databaseMigrationService.InitializeAsync(cancellationToken))
             {
-                if (await context.Database.EnsureCreatedAsync(cancellationToken))
-                {
-                    LogMessage($"Database initialized");
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-
-                if (await context.InitializeAsync(_ProgressReporter, cancellationToken))
-                {
-                    success = true;
-                    LogMessage($"Database is ready.");
-                }
+                success = true;
+                LogMessage($"Database is ready.");
             }
             return success;
         }

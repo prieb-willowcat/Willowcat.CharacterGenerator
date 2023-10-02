@@ -15,17 +15,17 @@ namespace Willowcat.CharacterGenerator.Model
         [Key]
         public string Key { get; set; } = string.Empty;
 
-        public string? Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; }
 
         public List<OptionModel> Options { get; set; } = new List<OptionModel>();
 
         public ChartModel? ParentChart { get; set; }
 
-        public string? ParentKey { get; set; } = string.Empty;
+        public string? ParentKey { get; set; }
 
         public int Sequence { get; set; }
 
-        public string? Source { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
 
         public List<ChartModel> SubCharts { get; set; } = new List<ChartModel>();
 

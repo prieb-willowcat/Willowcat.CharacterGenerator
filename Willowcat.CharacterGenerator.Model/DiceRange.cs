@@ -36,7 +36,7 @@ namespace Willowcat.CharacterGenerator.Model
         {
             DiceRange result = new(0);
 
-            Match match = _rangePattern.Match(str);
+            Match match = _rangePattern.Match(str.Trim());
             if (match.Success)
             {
                 int start = int.Parse(match.Groups[1].Value);

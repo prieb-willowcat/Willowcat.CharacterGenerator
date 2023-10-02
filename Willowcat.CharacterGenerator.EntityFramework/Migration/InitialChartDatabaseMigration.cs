@@ -1,40 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Willowcat.CharacterGenerator.Core.Models;
+﻿using System.Diagnostics;
 using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Data
 {
     public class InitialChartDatabaseMigration : IDatabaseMigration<ChartContext>
     {
-        public Task BringDownAsync(ChartContext chartDatabaseService, CancellationToken cancellationToken)
+        private readonly IChartCollectionRepository _chartCollectionRepository;
+        private readonly IProgress<ChartSetupMessage>? _progressReporter;
+
+        public InitialChartDatabaseMigration(IChartCollectionRepository chartCollectionRepository, IProgress<ChartSetupMessage>? progressReporter)
+        {
+            _chartCollectionRepository = chartCollectionRepository;
+            _progressReporter = progressReporter;
+        }
+
+        public Task BringDownAsync(ChartContext context, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         public async Task<bool> BringUpAsync(ChartContext context, CancellationToken cancellationToken)
         {
-            context.Report(new ChartSetupMessage(this, "Loading charts from resource files"));
-            var builder = new ChartCollectionBuilder();
-            await builder.AddChartsFromResourcesAsync(context.Configuration, context.ProgressReporter);
-            cancellationToken.ThrowIfCancellationRequested();
+            _progressReporter?.Report(new ChartSetupMessage(this, "Loading charts from resource files"));
 
             bool canContinue = true;
 
-            var parentChartCollections = builder.BuildCollections();
+            var parentChartCollections = await _chartCollectionRepository.BuildCollectionsAsync(cancellationToken);
             ClearChartsFromCollections(parentChartCollections);
             if (canContinue)
             {
                 canContinue = await InitializeCollections(context, parentChartCollections, cancellationToken);
             }
 
-            var charts = builder.BuildCharts();
-            var tags = ExtractTags(charts.Values);
-            var options = ExtractOptions(charts.Values);
+            var charts = await _chartCollectionRepository.BuildChartsAsync(cancellationToken);
+            var tags = ExtractTags(charts);
+            var options = ExtractOptions(charts);
             if (canContinue)
             {
                 await context.SaveChangesAsync();
@@ -44,7 +44,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             if (canContinue)
             {
                 await context.SaveChangesAsync();
-                canContinue = await InitializeCharts(context, charts.Values, cancellationToken);
+                canContinue = await InitializeCharts(context, charts, cancellationToken);
             }
 
             if (canContinue)
@@ -70,7 +70,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             }
         }
 
-        private async Task<bool> InitializeCollections(ChartContext context, List<ChartCollectionModel> collections, CancellationToken cancellationToken)
+        private async Task<bool> InitializeCollections(ChartContext context, IEnumerable<ChartCollectionModel> collections, CancellationToken cancellationToken)
         {
             var succeeded = true;
             foreach (var collection in collections)
@@ -96,7 +96,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
                     catch (Exception ex)
                     {
                         succeeded = false;
-                        context.Report(new ChartSetupMessage(this, $"Failed to add {collection.CollectionName}", ex));
+                        _progressReporter?.Report(new ChartSetupMessage(this, $"Failed to add {collection.CollectionName}", ex));
                         break;
                     }
                 }
@@ -109,7 +109,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             var succeeded = true;
             var chartsProcessed = 0;
             var totalCount = charts.Count();
-            context.Report(new ChartSetupMessage(this, "Inserting charts into database", chartsProcessed, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Inserting charts into database", chartsProcessed, totalCount));
             foreach (var chart in charts)
             {
                 chartsProcessed++;
@@ -117,26 +117,22 @@ namespace Willowcat.CharacterGenerator.Core.Data
                 if (existing == null && string.IsNullOrEmpty(chart.ParentKey))
                 {
                     Debug.WriteLine($"Adding chart {chart.ChartName} ({chart.Key})");
-                    foreach (var sub in chart.SubCharts)
-                    {
-                        Debug.WriteLine($"-- sub chart {sub.ChartName} ({sub.Key}) {sub.SubCharts.Count} more charts");
-                    }
                     try
                     {
                         await context.Charts.AddAsync(chart);
                         //await context.SaveChangesAsync();
-                        context.Report(new ChartSetupMessage(this, chartsProcessed));
+                        _progressReporter?.Report(new ChartSetupMessage(this, chartsProcessed));
                     }
                     catch (Exception ex)
                     {
                         succeeded = false;
-                        context.Report(new ChartSetupMessage(this, $"Failed to add {chart.ChartName} ({chart.Key})", ex));
+                        _progressReporter?.Report(new ChartSetupMessage(this, $"Failed to add {chart.ChartName} ({chart.Key})", ex));
                         break;
                     }
                 }
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            context.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
             return succeeded;
         }
 
@@ -145,7 +141,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             var succeeded = true;
             var optionsProcessed = 0;
             var totalCount = options.Count();
-            context.Report(new ChartSetupMessage(this, "Inserting options into database", optionsProcessed, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Inserting options into database", optionsProcessed, totalCount));
             foreach (var option in options)
             {
                 optionsProcessed++;
@@ -178,14 +174,14 @@ namespace Willowcat.CharacterGenerator.Core.Data
                     catch (Exception ex)
                     {
                         succeeded = false;
-                        context.Report(new ChartSetupMessage(this, $"Failed to add {option.Range} {option.Description} ({option.ChartKey})", ex));
+                        _progressReporter?.Report(new ChartSetupMessage(this, $"Failed to add {option.Range} {option.Description} ({option.ChartKey})", ex));
                         break;
                     }
                 }
-                context.Report(new ChartSetupMessage(this, optionsProcessed));
+                _progressReporter?.Report(new ChartSetupMessage(this, optionsProcessed));
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            context.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
             return succeeded;
         }
 
@@ -194,7 +190,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             var succeeded = true;
             var tagsProcessed = 0;
             var totalCount = tags.Count();
-            context.Report(new ChartSetupMessage(this, "Inserting tags into database", tagsProcessed, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Inserting tags into database", tagsProcessed, totalCount));
             foreach (var tag in tags)
             {
                 tagsProcessed++;
@@ -208,14 +204,14 @@ namespace Willowcat.CharacterGenerator.Core.Data
                     catch (Exception ex)
                     {
                         succeeded = false;
-                        context.Report(new ChartSetupMessage(this, $"Failed to add {tag.Name}", ex));
+                        _progressReporter?.Report(new ChartSetupMessage(this, $"Failed to add {tag.Name}", ex));
                         break;
                     }
                 }
-                context.Report(new ChartSetupMessage(this, tagsProcessed));
+                _progressReporter?.Report(new ChartSetupMessage(this, tagsProcessed));
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            context.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
+            _progressReporter?.Report(new ChartSetupMessage(this, "Done", totalCount, totalCount));
             return succeeded;
         }
 
@@ -236,7 +232,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             return options;
         }
 
-        private Dictionary<string, TagModel> ExtractTags(IEnumerable<ChartModel> charts, Dictionary<string, TagModel> tags = null)
+        private Dictionary<string, TagModel> ExtractTags(IEnumerable<ChartModel> charts, Dictionary<string, TagModel>? tags = null)
         {
             if (tags == null)
             {
@@ -245,21 +241,11 @@ namespace Willowcat.CharacterGenerator.Core.Data
                         
             foreach (var chart in charts)
             {
-                if (chart is FlatFileChartModel flatFileChart)
+                foreach (var tag in chart.Tags)
                 {
-                    foreach (var tagName in flatFileChart.ParsedTags)
+                    if (!tags.TryGetValue(tag.Name, out _))
                     {
-                        TagModel tag = null;
-                        if (!tags.TryGetValue(tagName, out tag))
-                        {
-                            tag = new TagModel()
-                            {
-                                //TagId = tags.Count,
-                                Name = tagName,
-                            };
-                            tags.Add(tagName, tag);
-                        }
-                        chart.Tags.Add(tag);
+                        tags.Add(tag.Name, tag);
                     }
                 }
                 tags = ExtractTags(chart.SubCharts, tags);

@@ -99,10 +99,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Charts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Willowcat.CharacterGenerator.Model\Willowcat.CharacterGenerator.Model.csproj" />
   </ItemGroup>
 

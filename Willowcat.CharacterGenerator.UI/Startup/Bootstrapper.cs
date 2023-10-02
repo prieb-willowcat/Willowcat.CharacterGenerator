@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
-using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Application.Extension;
 using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.EntityFramework.Extension;
+using Willowcat.CharacterGenerator.FlatFile.Extension;
 using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.Startup
@@ -15,6 +18,9 @@ namespace Willowcat.CharacterGenerator.UI.Startup
             services
                 .RegisterConfigurations()
                 .RegisterAppServices()
+                .RegisterApplicationServices()
+                .RegisterEntityFrameworkServices(builder => builder.UseSqlite($"Data Source={Properties.Settings.Default.DatabaseLocation}"))
+                .RegisterFlatFileServices(() => Properties.Settings.Default.ResourcesDirectory)
                 .RegisterViewModels()
                 .RegisterViews();
             return services.BuildServiceProvider();
@@ -24,8 +30,6 @@ namespace Willowcat.CharacterGenerator.UI.Startup
         {
             services.AddTransient<ICharacterSerializer, CharacterFileSerializer>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
-            services.AddSingleton<ChartService>();
-            services.AddTransient<TagService>(); 
             services.AddSingleton(new Random());
             return services;
         }

@@ -42,7 +42,7 @@ namespace Willowcat.CharacterGenerator.Model
         public static Dice Parse(string value)
         {
             Dice dice = new();
-            Match match = _dicePattern.Match(value);
+            Match match = _dicePattern.Match(value.Trim());
             if (match.Success)
             {
                 int count = 1;
