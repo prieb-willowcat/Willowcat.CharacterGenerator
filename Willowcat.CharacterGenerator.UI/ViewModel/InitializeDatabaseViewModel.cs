@@ -12,7 +12,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
     public class InitializeDatabaseViewModel : ViewModelBase
     {
-        private readonly DatabaseConfiguration _Configuration;
         private readonly DatabaseMigrationService _databaseMigrationService;
         private readonly object _Lock = new object();
         private readonly object _MessageLock = new object();
@@ -37,24 +36,22 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public string DatabaseLocation
         {
-            get => _Configuration.DatabaseLocation;
+            get => Properties.Settings.Default.DatabaseLocation;
             set
             {
-                _Configuration.DatabaseLocation = value;
-                UI.Properties.Settings.Default.DatabaseLocation = value;
-                UI.Properties.Settings.Default.Save();
+                Properties.Settings.Default.DatabaseLocation = value;
+                Properties.Settings.Default.Save();
                 OnPropertyChanged();
             }
         }
 
         public string ResourcesDirectory
         {
-            get => _Configuration.ResourcesDirectory;
+            get => Properties.Settings.Default.ResourcesDirectory;
             set
             {
-                _Configuration.ResourcesDirectory = value;
-                UI.Properties.Settings.Default.ResourcesDirectory = value;
-                UI.Properties.Settings.Default.Save();
+                Properties.Settings.Default.ResourcesDirectory = value;
+                Properties.Settings.Default.Save();
                 OnPropertyChanged();
             }
         }
@@ -113,14 +110,12 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         public InitializeDatabaseViewModel()
         {
-            _Configuration = new DatabaseConfiguration();
             StatusMessage = "This is a test message";
             StatusLog = "Willowcat.CharacterGenerator" + Environment.NewLine + StatusMessage;
         }
 
         public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseConfiguration configuration, DatabaseMigrationService databaseMigrationService)
         {
-            _Configuration = configuration;
             _databaseMigrationService = databaseMigrationService;
             progressReporter.ProgressChanged += ProgressReporter_ProgressChanged;
         }
@@ -179,9 +174,9 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private bool CanLoadDatabase()
         {
-            if (!File.Exists(_Configuration.DatabaseLocation))
+            if (!File.Exists(DatabaseLocation))
             {
-                var parentPath = Path.GetDirectoryName(_Configuration.DatabaseLocation);
+                var parentPath = Path.GetDirectoryName(DatabaseLocation);
                 if (!Directory.Exists(parentPath))
                 {
                     Directory.CreateDirectory(parentPath);
@@ -194,7 +189,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         private async Task<bool> InitializeDatabaseAsync(CancellationToken cancellationToken)
         {
             bool success = false;
-            //DatabaseMigrationService.ClearOldDatabase(_Configuration.DatabaseLocation);
+            //DatabaseMigrationService.ClearOldDatabase(DatabaseLocation);
             if (await _databaseMigrationService.InitializeAsync(cancellationToken))
             {
                 success = true;

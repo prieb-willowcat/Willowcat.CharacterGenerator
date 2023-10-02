@@ -1,13 +1,9 @@
-﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Xml;
+using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Core.Randomizer;
 
-namespace Willowcat.CharacterGenerator.Core.Randomizer
+namespace Willowcat.CharacterGenerator.BehindTheName.Generator
 {
     public class RandomBehindTheName : INameGenerator
     {
@@ -21,7 +17,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         private readonly Gender _SelectedGender = Gender.Random;
         private readonly int _NumberToSelect = 6;
         private readonly string _ApiKey = string.Empty;
-        private readonly WebClientWrapper _WebClient = null;
+        private readonly IHttpJsonClient _WebClient;
 
         /// <summary>
         /// https://www.behindthename.com/api/appendix2.php
@@ -93,17 +89,19 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
             ["yor"] = "Yoruba"
         };
 
-        public RandomBehindTheName(string apiKey, Gender gender, int numberToSelect, WebClientWrapper webClient = null)
+        public RandomBehindTheName(IHttpJsonClient webClient, string? apiKey, Gender gender, int numberToSelect)
         {
-            _ApiKey = apiKey;
             if (string.IsNullOrEmpty(apiKey))
             {
                 throw new ArgumentException("valid API key required for behindthename.com", nameof(apiKey));
             }
+            _ApiKey = apiKey;
             _NumberToSelect = numberToSelect;
             _SelectedGender = gender;
-            _WebClient = webClient ?? new WebClientWrapper();
+            _WebClient = webClient;
         }
+
+        public bool ShowRegionSelector => true;
 
         /// <summary>
         /// Limited to 6 names at a time.
@@ -163,7 +161,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         public IEnumerable<string> GetNamesFromApi(string url, int numberToSelect)
         {
             string fullUrl = url + $"&number={numberToSelect}";
-            string jsonResponse = _WebClient.Download(fullUrl);
+            string jsonResponse = _WebClient.DownloadJson(fullUrl);
             var response = JsonSerializer.Deserialize<BehindTheNamesRandomResponse>(jsonResponse);
             if (response != null)
             {
@@ -192,7 +190,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
             string fileName = $"behindthenames-{_SelectedGender}-{selectedRegion ?? string.Empty}.txt";
             string path = Path.Combine(Path.GetTempPath(), _TempDirectory, fileName);
             File.WriteAllLines(path, names.ToArray());
-        } 
+        }
     }
 
     internal class BehindTheNamesRandomResponse

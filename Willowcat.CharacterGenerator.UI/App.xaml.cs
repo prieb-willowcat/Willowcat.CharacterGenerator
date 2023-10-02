@@ -42,9 +42,7 @@ namespace Willowcat.CharacterGenerator.UI
                     }
                     _DatabaseConfiguration = new DatabaseConfiguration()
                     {
-                        BehindTheNameApiKey = behindTheNamesApiKey,
-                        ResourcesDirectory = UI.Properties.Settings.Default.ResourcesDirectory,
-                        DatabaseLocation = UI.Properties.Settings.Default.DatabaseLocation
+                        BehindTheNameApiKey = behindTheNamesApiKey
                     };
                 }
                 return _DatabaseConfiguration;

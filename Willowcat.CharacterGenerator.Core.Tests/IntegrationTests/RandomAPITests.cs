@@ -2,7 +2,7 @@
 using Moq;
 using System;
 using Unidecode.NET;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Willowcat.CharacterGenerator.BehindTheName.Generator;
 
 namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
 {
@@ -14,8 +14,8 @@ namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
         [TestMethod]
         public void RandomUiName()
         {
-            var mockWebClient = new Mock<WebClientWrapper>();
-            mockWebClient.Setup(client => client.Download(It.IsAny<string>())).Returns(_SampleJson);
+            var mockWebClient = new Mock<IHttpJsonClient>();
+            mockWebClient.Setup(client => client.DownloadJson(It.IsAny<string>())).Returns(_SampleJson);
 
             RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object);
 
@@ -27,8 +27,8 @@ namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
         [TestMethod]
         public void RandomUiNames()
         {
-            var mockWebClient = new Mock<WebClientWrapper>();
-            mockWebClient.Setup(client => client.Download(It.IsAny<string>())).Returns(_SampleJson);
+            var mockWebClient = new Mock<IHttpJsonClient>();
+            mockWebClient.Setup(client => client.DownloadJson(It.IsAny<string>())).Returns(_SampleJson);
 
             RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object);
 

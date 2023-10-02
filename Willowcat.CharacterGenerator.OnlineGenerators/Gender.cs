@@ -2,6 +2,8 @@
 {
     public enum Gender
     {
-        Male, Female, Random
+        Male,
+        Female, 
+        Random
     }
 }

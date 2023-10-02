@@ -7,6 +7,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
 {
     public interface INameGenerator
     {
+        bool ShowRegionSelector { get; }
         IEnumerable<string> GetSavedNames(string selectedRegion);
         Task<IEnumerable<string>> GetNamesAsync(string selectedRegion);
     }

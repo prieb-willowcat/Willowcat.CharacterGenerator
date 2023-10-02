@@ -1,26 +1,26 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.Core.Randomizer;
 
-namespace Willowcat.CharacterGenerator.Core.Randomizer
+namespace Willowcat.CharacterGenerator.BehindTheName.Generator
 {
     public class RandomElvenNames : INameGenerator
     {
-        public WebClientWrapper _WebClient = null;
+        public readonly IHttpJsonClient _webClient;
         private readonly string _BaseUrl = "https://www.namegenerator.biz/application/p.php?type=4&id=elven_female_names&id2=elven_male_names&spaceflag=false";
         private readonly string _TempDirectory = "CharacterGeneration";
         private readonly string _TempFileName = "elven_names.txt";
 
-        public RandomElvenNames(WebClientWrapper webClient = null)
+        public RandomElvenNames(IHttpJsonClient webClient)
         {
-            _WebClient = webClient ?? new WebClientWrapper();
+            _webClient = webClient;
         }
+
+        public bool ShowRegionSelector => false;
 
         private IEnumerable<string> GetElvenNames(string tempFilePath)
         {
             string nextName = string.Empty;
-            string response = _WebClient.Download(_BaseUrl);
+            string response = _webClient.DownloadJson(_BaseUrl);
             string[] names = response.Split(new char[] { ',' });
             SaveNames(tempFilePath, names);
             return names.ToList();

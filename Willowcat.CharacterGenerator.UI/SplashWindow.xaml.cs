@@ -35,7 +35,7 @@ namespace Willowcat.CharacterGenerator.UI
             if (DataContext is InitializeDatabaseViewModel viewModel)
             {
                 Cursor = Cursors.Wait;
-                shouldClose = await viewModel.LoadDataAsync();
+                shouldClose = await viewModel.LoadDataAsync().ConfigureAwait(false);
             }
             Cursor = Cursors.Arrow;
             if (shouldClose)

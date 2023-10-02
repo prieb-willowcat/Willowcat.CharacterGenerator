@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Willowcat.CharacterGenerator.Model;
+﻿using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
 
 namespace Willowcat.CharacterGenerator.Core.Randomizer
@@ -83,7 +80,7 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
 
         private static void LoadFatePercentages()
         {
-            string[] lines = Properties.Resources.MythicFateChart.Split('\n');
+            string[] lines = Application.Properties.Resources.MythicFateChart.Split('\n');
             foreach (string line in lines)
             {
                 string[] fields = line.Trim().Split('\t');
