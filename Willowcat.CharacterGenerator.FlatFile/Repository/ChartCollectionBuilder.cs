@@ -117,17 +117,6 @@ namespace Willowcat.CharacterGenerator.Core
         //    return this;
         //}
 
-        //public ChartCollectionBuilder AddNameCharts(DatabaseConfiguration options)
-        //{
-
-        //    AddCharts(new[] {
-        //        RandomNameChart.GetFemaleNameChart(options.BehindTheNameApiKey),
-        //        RandomNameChart.GetMaleNameChart(options.BehindTheNameApiKey),
-        //        RandomNameChart.GetElvenNameChart()
-        //    }, "Names");
-        //    return this;
-        //}
-
         public Task<IEnumerable<ChartModel>> BuildChartsAsync(CancellationToken cancellationToken = default)
         {
             SetUpTags(_Charts.Values);

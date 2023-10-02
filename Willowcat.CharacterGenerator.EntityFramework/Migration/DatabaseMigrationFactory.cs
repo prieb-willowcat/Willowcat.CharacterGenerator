@@ -15,8 +15,9 @@ namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 
         public IEnumerable<IDatabaseMigration<ChartContext>> GetMigrations()
         {
-            IProgress<ChartSetupMessage>? progressReporter = _provider.GetService<IProgress<ChartSetupMessage>>();
-            yield return new InitialChartDatabaseMigration(_provider.GetRequiredService<IChartCollectionRepository>(), progressReporter);
+            var progressReporter = _provider.GetService<IProgress<ChartSetupMessage>>();
+            var chartCollectionRepositories = _provider.GetServices<IChartCollectionRepository>();
+            yield return new InitialChartDatabaseMigration(chartCollectionRepositories, progressReporter);
         }
     }
 }

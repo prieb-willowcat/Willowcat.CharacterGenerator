@@ -5,12 +5,12 @@ namespace Willowcat.CharacterGenerator.Core.Data
 {
     public class InitialChartDatabaseMigration : IDatabaseMigration<ChartContext>
     {
-        private readonly IChartCollectionRepository _chartCollectionRepository;
+        private readonly IEnumerable<IChartCollectionRepository> _chartCollectionRepositories;
         private readonly IProgress<ChartSetupMessage>? _progressReporter;
 
-        public InitialChartDatabaseMigration(IChartCollectionRepository chartCollectionRepository, IProgress<ChartSetupMessage>? progressReporter)
+        public InitialChartDatabaseMigration(IEnumerable<IChartCollectionRepository> chartCollectionRepositories, IProgress<ChartSetupMessage>? progressReporter)
         {
-            _chartCollectionRepository = chartCollectionRepository;
+            _chartCollectionRepositories = chartCollectionRepositories;
             _progressReporter = progressReporter;
         }
 
@@ -25,37 +25,40 @@ namespace Willowcat.CharacterGenerator.Core.Data
 
             bool canContinue = true;
 
-            var parentChartCollections = await _chartCollectionRepository.BuildCollectionsAsync(cancellationToken);
-            ClearChartsFromCollections(parentChartCollections);
-            if (canContinue)
+            foreach (var repo in _chartCollectionRepositories)
             {
-                canContinue = await InitializeCollections(context, parentChartCollections, cancellationToken);
-            }
+                var parentChartCollections = await repo.BuildCollectionsAsync(cancellationToken);
+                ClearChartsFromCollections(parentChartCollections);
+                if (canContinue)
+                {
+                    canContinue = await InitializeCollections(context, parentChartCollections, cancellationToken);
+                }
 
-            var charts = await _chartCollectionRepository.BuildChartsAsync(cancellationToken);
-            var tags = ExtractTags(charts);
-            var options = ExtractOptions(charts);
-            if (canContinue)
-            {
-                await context.SaveChangesAsync();
-                canContinue = await InitializeTags(context, tags.Values, cancellationToken);
-            }
+                var charts = await repo.BuildChartsAsync(cancellationToken);
+                var tags = ExtractTags(charts);
+                var options = ExtractOptions(charts);
+                if (canContinue)
+                {
+                    await context.SaveChangesAsync();
+                    canContinue = await InitializeTags(context, tags.Values, cancellationToken);
+                }
 
-            if (canContinue)
-            {
-                await context.SaveChangesAsync();
-                canContinue = await InitializeCharts(context, charts, cancellationToken);
-            }
+                if (canContinue)
+                {
+                    await context.SaveChangesAsync();
+                    canContinue = await InitializeCharts(context, charts, cancellationToken);
+                }
 
-            if (canContinue)
-            {
-                await context.SaveChangesAsync();
-                canContinue = await InitializeOptions(context, options, cancellationToken);
-            }
+                if (canContinue)
+                {
+                    await context.SaveChangesAsync();
+                    canContinue = await InitializeOptions(context, options, cancellationToken);
+                }
 
-            if (canContinue)
-            {
-                await context.SaveChangesAsync();
+                if (canContinue)
+                {
+                    await context.SaveChangesAsync();
+                }
             }
 
             return canContinue;

@@ -6,6 +6,7 @@ using Willowcat.CharacterGenerator.Application.Extension;
 using Willowcat.CharacterGenerator.Core.TextRepository;
 using Willowcat.CharacterGenerator.EntityFramework.Extension;
 using Willowcat.CharacterGenerator.FlatFile.Extension;
+using Willowcat.CharacterGenerator.OnlineGenerators.Extension;
 using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.Startup
@@ -21,6 +22,7 @@ namespace Willowcat.CharacterGenerator.UI.Startup
                 .RegisterApplicationServices()
                 .RegisterEntityFrameworkServices(builder => builder.UseSqlite($"Data Source={Properties.Settings.Default.DatabaseLocation}"))
                 .RegisterFlatFileServices(() => Properties.Settings.Default.ResourcesDirectory)
+                .RegisterOnlineGenerators(() => Environment.GetEnvironmentVariable("BehindTheNamesApiKey", EnvironmentVariableTarget.User))
                 .RegisterViewModels()
                 .RegisterViews();
             return services.BuildServiceProvider();
