@@ -11,6 +11,7 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Extension
         {
             services.AddSingleton(provider => new RandomNameChartFactory(provider, getBehindTheNameApiKey));
             services.AddSingleton<IChartCollectionRepository>(provider => provider.GetRequiredService<RandomNameChartFactory>());
+            services.AddSingleton<IAutoGeneratorFactory>(provider => provider.GetRequiredService<RandomNameChartFactory>());
             services.AddTransient<IHttpJsonClient, HttpJsonClient>();
             return services;
         }

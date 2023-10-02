@@ -6,11 +6,13 @@ namespace Willowcat.CharacterGenerator.Core
 {
     public class ChartService : IChartRepository
     {
-        private readonly ChartContextFactory _factory;
+        private readonly ChartContextFactory _contextFactory;
+        private readonly IEnumerable<IAutoGeneratorFactory> _autoGeneratorFactories;
 
-        public ChartService(ChartContextFactory factory)
+        public ChartService(ChartContextFactory contextFactory, IEnumerable<IAutoGeneratorFactory> autoGeneratorFactories)
         {
-            _factory = factory;
+            _contextFactory = contextFactory;
+            _autoGeneratorFactories = autoGeneratorFactories;
         }
 
         public ChartModel? GetChart(string chartKey)
@@ -18,7 +20,7 @@ namespace Willowcat.CharacterGenerator.Core
             ChartModel? model = null;
             if (!string.IsNullOrEmpty(chartKey))
             {
-                using (ChartContext context = _factory.GetChartContext())
+                using (ChartContext context = _contextFactory.GetChartContext())
                 {
                     model = context.Charts.Find(chartKey);
                     if (model != null)
@@ -26,6 +28,17 @@ namespace Willowcat.CharacterGenerator.Core
                         context.Entry(model)
                             .Collection(x => x.Options)
                             .Load();
+                    }
+                }
+
+                if (model != null && model.AutogenerateOptions)
+                {
+                    foreach (var autoGeneratorFactory in _autoGeneratorFactories)
+                    {
+                        if (autoGeneratorFactory.CanAutoGenerate(model))
+                        {
+                            model = autoGeneratorFactory.GetAutoGeneratingChart(model);
+                        }
                     }
                 }
             }
@@ -37,7 +50,7 @@ namespace Willowcat.CharacterGenerator.Core
             ChartCollectionModel? model = null;
             if (!string.IsNullOrEmpty(source))
             {
-                using (ChartContext context = _factory.GetChartContext())
+                using (ChartContext context = _contextFactory.GetChartContext())
                 {
                     model = context.ChartCollections.Find(source);
                 }
@@ -75,7 +88,7 @@ namespace Willowcat.CharacterGenerator.Core
         {
             var collections = new List<ChartCollectionModel>();
 
-            using (ChartContext context = _factory.GetChartContext())
+            using (ChartContext context = _contextFactory.GetChartContext())
             {
                 collections = await LoadChartCollections(context);
             }

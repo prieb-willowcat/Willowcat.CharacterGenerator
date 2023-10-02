@@ -5,7 +5,7 @@ using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Models
 {
-    public class RandomNameChartFactory : IChartCollectionRepository
+    public class RandomNameChartFactory : IChartCollectionRepository, IAutoGeneratorFactory
     {
         private readonly IServiceProvider _provider;
         private readonly Func<string> _getBehindTheNameApiKey;
@@ -33,7 +33,24 @@ namespace Willowcat.CharacterGenerator.Core.Models
             return Task.FromResult((IEnumerable<ChartCollectionModel>)Array.Empty<ChartCollectionModel>());
         }
 
-        public RandomNameChart GetChart(NameCategory nameCategory)
+        public bool CanAutoGenerate(ChartModel chart) => chart.Source == "Names";
+
+        public ChartModel GetAutoGeneratingChart(ChartModel chart)
+        {
+            if (CanAutoGenerate(chart))
+            {
+                switch(chart.Key)
+                {
+                    case "names-elven": return GetChart(NameCategory.Elvish, true);
+                    case "names-female": return GetChart(NameCategory.Human_Female, true);
+                    case "names-male": return GetChart(NameCategory.Human_Male, true);
+                }
+            }
+
+            return chart;
+        }
+
+        public RandomNameChart GetChart(NameCategory nameCategory, bool loadRegions = false)
         {
             INameGenerator? nameGenerator = GetNameGenerator(nameCategory);
             RandomNameChart? chart = null;
@@ -54,7 +71,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
                         break;
                 }
 
-                if (chart != null && nameGenerator.ShowRegionSelector)
+                if (chart != null && nameGenerator.ShowRegionSelector && loadRegions)
                 {
                     foreach (var kvp in RandomBehindTheName.Regions)
                     {

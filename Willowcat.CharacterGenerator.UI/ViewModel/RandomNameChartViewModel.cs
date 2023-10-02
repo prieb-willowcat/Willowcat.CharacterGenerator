@@ -51,7 +51,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public override bool ShowRegionSelector => true;
+        public override bool ShowRegionSelector => _randomNameChart.ShowRegionSelector;
 
         public override void Initialize(int? selectedRange)
         {

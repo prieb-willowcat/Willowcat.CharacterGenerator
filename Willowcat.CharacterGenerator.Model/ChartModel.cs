@@ -8,6 +8,8 @@ namespace Willowcat.CharacterGenerator.Model
     [Table("Chart")]
     public class ChartModel
     {
+        public bool AutogenerateOptions { get; set; } = false;
+
         public string ChartName { get; set; } = string.Empty;
 
         public Dice Dice { get; set; } = new Dice(0, 0);

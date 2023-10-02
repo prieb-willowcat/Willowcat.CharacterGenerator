@@ -12,6 +12,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
             Key = key;
             ChartName = name;
             Source = "Names";
+            AutogenerateOptions = true;
         }
 
         public INameGenerator NameGenerator { get; private set; }
