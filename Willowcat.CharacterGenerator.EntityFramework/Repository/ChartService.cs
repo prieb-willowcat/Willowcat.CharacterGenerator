@@ -111,7 +111,7 @@ namespace Willowcat.CharacterGenerator.Core
             }
 
             collections = await filtered
-                .Include(x => x.Charts.Where(ch => ch.ParentKey == null))
+                .Include(x => x.Charts.Where(ch => ch.ParentKey == null).OrderBy(x => x.Sequence))
                 .ThenInclude(x => x.Tags)
                 .ToListAsync();
 
@@ -131,6 +131,7 @@ namespace Willowcat.CharacterGenerator.Core
                 chart.SubCharts = await context.Charts
                     .Where(x => x.ParentKey == chart.Key)
                     .Include(x => x.Tags)
+                    .OrderBy(x => x.Sequence)
                     .ToListAsync();
             }
         }

@@ -12,12 +12,14 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
             Key = FormatChartKey(chaosRank);
             ChartName = $"Chaos Rank {chaosRank}";
             Source = "MythicRandomEventCharts";
+            Sequence = 10 + chaosRank;
             SetOddsOptions(chaosRank);
         }
 
         public MythicFateChart(int chaosRank, MythicFateOdds odds)
         {
             Key = FormatChartKey(chaosRank, odds);
+            Sequence = (int)odds;
             ParentKey = FormatChartKey(chaosRank);
             ChartName = GetDescriptionByOdds(odds);
             Source = "MythicRandomEventCharts";
