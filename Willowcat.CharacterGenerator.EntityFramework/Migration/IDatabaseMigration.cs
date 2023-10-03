@@ -1,4 +1,4 @@
-﻿namespace Willowcat.CharacterGenerator.Core.Data
+﻿namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 {
     public interface IDatabaseMigration<T>
     {

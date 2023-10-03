@@ -1,5 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.TextRepository;
-using System;
+﻿using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,6 +7,7 @@ using Willowcat.CharacterGenerator.UI.Startup;
 using Willowcat.CharacterGenerator.Core;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 
 namespace Willowcat.CharacterGenerator.UI
 {

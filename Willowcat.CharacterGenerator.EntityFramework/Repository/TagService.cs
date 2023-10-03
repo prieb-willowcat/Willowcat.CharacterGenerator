@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Willowcat.CharacterGenerator.Core.Data;
+using Willowcat.CharacterGenerator.EntityFramework.Database;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core
+namespace Willowcat.CharacterGenerator.EntityFramework.Repository
 {
     public class TagService
     {

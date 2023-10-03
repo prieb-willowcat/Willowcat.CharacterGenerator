@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using Willowcat.CharacterGenerator.Core.Data;
+using Willowcat.CharacterGenerator.Model.Progress;
 using Willowcat.CharacterGenerator.UI.ViewModel.Factory;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel.Extension

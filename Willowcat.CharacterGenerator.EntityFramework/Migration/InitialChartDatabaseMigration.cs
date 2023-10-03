@@ -1,7 +1,11 @@
 ﻿using System.Diagnostics;
+using Willowcat.CharacterGenerator.Application.Extension;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.EntityFramework.Database;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Progress;
 
-namespace Willowcat.CharacterGenerator.Core.Data
+namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 {
     public class InitialChartDatabaseMigration : IDatabaseMigration<ChartContext>
     {
@@ -152,7 +156,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
                 if (existing == null)
                 {
                     var chart = context.Charts.Find(option.ChartKey);
-                    if (chart == null) 
+                    if (chart == null)
                     {
                         Debug.WriteLine($"{option.ChartKey}\t{option.ChartKey}\t{option.Range}\t{option.Description}");
                     }
@@ -199,7 +203,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
                 tagsProcessed++;
                 var existing = context.Tags.Find(tag.TagId);
                 if (existing == null)
-                { 
+                {
                     try
                     {
                         await context.Tags.AddAsync(tag);
@@ -241,7 +245,7 @@ namespace Willowcat.CharacterGenerator.Core.Data
             {
                 tags = new Dictionary<string, TagModel>(StringComparer.CurrentCultureIgnoreCase);
             }
-                        
+
             foreach (var chart in charts)
             {
                 foreach (var tag in chart.Tags)

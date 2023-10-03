@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
+using Willowcat.CharacterGenerator.OnlineGenerators;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Models;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.OnlineGenerators.Http;
 
 namespace Willowcat.CharacterGenerator.OnlineGenerators.Extension
 {

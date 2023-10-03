@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using System;
 using Willowcat.CharacterGenerator.Application.Extension;
-using Willowcat.CharacterGenerator.Core.TextRepository;
 using Willowcat.CharacterGenerator.EntityFramework.Extension;
 using Willowcat.CharacterGenerator.FlatFile.Extension;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.OnlineGenerators.Extension;
 using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.EntityFramework.Database;
+using Willowcat.CharacterGenerator.Model.Progress;
 
 namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 {

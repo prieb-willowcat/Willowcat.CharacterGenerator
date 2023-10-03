@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Willowcat.CharacterGenerator.BehindTheName.Generator.Json;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.OnlineGenerators;
+using Willowcat.CharacterGenerator.OnlineGenerators.Generator.Json;
 
-namespace Willowcat.CharacterGenerator.BehindTheName.Generator
+namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
 {
 
     public class RandomUiNames

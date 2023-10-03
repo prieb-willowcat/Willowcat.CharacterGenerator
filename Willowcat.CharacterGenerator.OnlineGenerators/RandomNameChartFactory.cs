@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.BehindTheName.Generator;
-using Willowcat.CharacterGenerator.Core.Randomizer;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.OnlineGenerators.Generator;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.OnlineGenerators
 {
     public class RandomNameChartFactory : IChartCollectionRepository, IAutoGeneratorFactory
     {
@@ -18,7 +19,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
 
         public Task<IEnumerable<ChartModel>> BuildChartsAsync(CancellationToken cancellationToken = default)
         {
-            IEnumerable<ChartModel> charts = new List<ChartModel>() 
+            IEnumerable<ChartModel> charts = new List<ChartModel>()
             {
                 GetChart(NameCategory.Elvish),
                 GetChart(NameCategory.Human_Female),
@@ -39,7 +40,7 @@ namespace Willowcat.CharacterGenerator.Core.Models
         {
             if (CanAutoGenerate(chart))
             {
-                switch(chart.Key)
+                switch (chart.Key)
                 {
                     case "names-elven": return GetChart(NameCategory.Elvish, true);
                     case "names-female": return GetChart(NameCategory.Human_Female, true);

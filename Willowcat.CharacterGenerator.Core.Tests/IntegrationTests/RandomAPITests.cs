@@ -2,7 +2,8 @@
 using Moq;
 using System;
 using Unidecode.NET;
-using Willowcat.CharacterGenerator.BehindTheName.Generator;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.OnlineGenerators.Generator;
 
 namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
 {

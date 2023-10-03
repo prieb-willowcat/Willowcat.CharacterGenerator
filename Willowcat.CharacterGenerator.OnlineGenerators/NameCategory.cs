@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Willowcat.CharacterGenerator.Core.Randomizer
+namespace Willowcat.CharacterGenerator.OnlineGenerators
 {
     public enum NameCategory
     {

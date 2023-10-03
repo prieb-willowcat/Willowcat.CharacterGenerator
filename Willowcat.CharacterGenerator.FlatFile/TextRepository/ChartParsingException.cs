@@ -1,7 +1,7 @@
 ﻿using System;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class ChartParsingException : Exception
     {

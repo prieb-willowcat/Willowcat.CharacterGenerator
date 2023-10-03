@@ -3,9 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Core.Tests.Extension;
-using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.FlatFile.Repository;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.Model;
 
 namespace Willowcat.CharacterGenerator.Core.Tests

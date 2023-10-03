@@ -4,8 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
 using Willowcat.CharacterGenerator.EntityFramework.Migration;
+using Willowcat.CharacterGenerator.Model.Progress;
 using Willowcat.Common.UI.ViewModels;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel

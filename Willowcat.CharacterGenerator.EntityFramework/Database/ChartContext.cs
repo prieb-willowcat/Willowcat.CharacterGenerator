@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Willowcat.CharacterGenerator.Core.Models;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Data
+namespace Willowcat.CharacterGenerator.EntityFramework.Database
 {
 
     public class ChartContext : DbContext

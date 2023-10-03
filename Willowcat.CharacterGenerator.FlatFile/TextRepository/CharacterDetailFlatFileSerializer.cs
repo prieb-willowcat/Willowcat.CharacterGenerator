@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class CharacterDetailFlatFileSerializer : ICharacterSerializer
-    {        enum State
+    {
+        enum State
         {
             Overview,
             Note,

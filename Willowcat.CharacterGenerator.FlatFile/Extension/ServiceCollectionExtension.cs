@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
-using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
+using Willowcat.CharacterGenerator.Model.Progress;
 
 namespace Willowcat.CharacterGenerator.FlatFile.Extension
 {

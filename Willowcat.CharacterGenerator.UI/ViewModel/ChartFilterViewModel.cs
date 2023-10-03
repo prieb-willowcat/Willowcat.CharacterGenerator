@@ -5,8 +5,8 @@ using System.Linq;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 using System.Threading.Tasks;
-using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {

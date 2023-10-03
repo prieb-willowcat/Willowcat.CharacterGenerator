@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Willowcat.CharacterGenerator.Core.Data
+namespace Willowcat.CharacterGenerator.EntityFramework.Database
 {
     public class ChartContextFactory
     {

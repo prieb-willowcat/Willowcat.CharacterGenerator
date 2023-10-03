@@ -1,7 +1,7 @@
-﻿using Willowcat.CharacterGenerator.Core.Randomizer;
+﻿using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.OnlineGenerators
 {
 
     public class RandomNameChart : ChartModel

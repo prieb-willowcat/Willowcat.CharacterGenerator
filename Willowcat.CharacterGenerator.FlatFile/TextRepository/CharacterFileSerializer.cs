@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class CharacterFileSerializer : ICharacterSerializer
     {

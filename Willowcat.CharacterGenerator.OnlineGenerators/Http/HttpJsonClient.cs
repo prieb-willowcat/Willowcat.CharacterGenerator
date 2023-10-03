@@ -1,4 +1,6 @@
-﻿namespace Willowcat.CharacterGenerator.Core.Randomizer
+﻿using Willowcat.CharacterGenerator.Application.Interface;
+
+namespace Willowcat.CharacterGenerator.OnlineGenerators.Http
 {
 
     public class HttpJsonClient : IHttpJsonClient

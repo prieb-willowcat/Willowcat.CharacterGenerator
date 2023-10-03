@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
 using Willowcat.CharacterGenerator.UI.Commands;

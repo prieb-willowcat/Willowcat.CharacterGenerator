@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.Model
 {
     [Table("Migration")]
     [DebuggerDisplay("{Sequence}. {Name} (Ran on {DateRan})")]
-    public class MigrationModel 
+    public class MigrationModel
     {
         public string Name { get; set; } = string.Empty;
 
