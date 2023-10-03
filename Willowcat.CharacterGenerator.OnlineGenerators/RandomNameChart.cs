@@ -16,9 +16,5 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators
         }
 
         public INameGenerator NameGenerator { get; private set; }
-
-        public Dictionary<string, string> Regions { get; private set; } = new Dictionary<string, string>();
-
-        public bool ShowRegionSelector { get; protected set; } = false;
     }
 }

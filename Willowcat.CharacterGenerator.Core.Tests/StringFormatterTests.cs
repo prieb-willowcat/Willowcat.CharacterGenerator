@@ -1,12 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Willowcat.CharacterGenerator.Core.Tests
+﻿namespace Willowcat.CharacterGenerator.Core.Tests
 {
     //[TestClass]
     //TODO: public class StringFormatterTests

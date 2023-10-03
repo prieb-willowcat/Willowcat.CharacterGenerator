@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Willowcat.CharacterGenerator.Application.Extension;
-using Willowcat.CharacterGenerator.Core.TextRepository;
 using Willowcat.CharacterGenerator.FlatFile.Repository;
 using Willowcat.CharacterGenerator.Model;
 

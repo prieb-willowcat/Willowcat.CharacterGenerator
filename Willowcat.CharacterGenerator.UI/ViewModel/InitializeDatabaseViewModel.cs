@@ -114,7 +114,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             StatusLog = "Willowcat.CharacterGenerator" + Environment.NewLine + StatusMessage;
         }
 
-        public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseConfiguration configuration, DatabaseMigrationService databaseMigrationService)
+        public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseMigrationService databaseMigrationService)
         {
             _databaseMigrationService = databaseMigrationService;
             progressReporter.ProgressChanged += ProgressReporter_ProgressChanged;

@@ -51,18 +51,18 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public override bool ShowRegionSelector => _randomNameChart.ShowRegionSelector;
+        public override bool ShowRegionSelector => _randomNameChart.NameGenerator.ShowRegionSelector;
 
         public override void Initialize(int? selectedRange)
         {
             ObservableCollection<RegionOption> newRegionOptions = new ObservableCollection<RegionOption>();
             RegionOption selectedRegionOption = null;
 
-            if (_randomNameChart.Regions != null)
+            if (_randomNameChart.NameGenerator.Regions != null)
             {
                 string lastRegionSelected = Properties.Settings.Default.LastRegionSelected;
 
-                foreach (var kvp in _randomNameChart.Regions)
+                foreach (var kvp in _randomNameChart.NameGenerator.Regions)
                 {
                     var option = new RegionOption(kvp.Key, kvp.Value);
                     newRegionOptions.Add(option);

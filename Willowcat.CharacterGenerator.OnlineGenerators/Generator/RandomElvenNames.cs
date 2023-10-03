@@ -14,6 +14,8 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
             _webClient = webClient;
         }
 
+        public Dictionary<string, string> Regions { get; } = new Dictionary<string, string>();
+
         public bool ShowRegionSelector => false;
 
         private IEnumerable<string> GetElvenNames(string tempFilePath)
