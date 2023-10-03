@@ -1,8 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using Unidecode.NET;
 using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.Core.Tests.Mock;
 using Willowcat.CharacterGenerator.OnlineGenerators.Generator;
 
 namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
@@ -17,8 +20,9 @@ namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
         {
             var mockWebClient = new Mock<IHttpJsonClient>();
             mockWebClient.Setup(client => client.DownloadJson(It.IsAny<string>())).Returns(_SampleJson);
+            var mockLogger = new DebugLogger<RandomUiNames>();
 
-            RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object);
+            RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object, mockLogger);
 
             string value = randomNames.NextHumanName();
             Console.WriteLine("Random Name: " + value.Unidecode());
@@ -30,8 +34,9 @@ namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
         {
             var mockWebClient = new Mock<IHttpJsonClient>();
             mockWebClient.Setup(client => client.DownloadJson(It.IsAny<string>())).Returns(_SampleJson);
+            var mockLogger = new DebugLogger<RandomUiNames>();
 
-            RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object);
+            RandomUiNames randomNames = new RandomUiNames(mockWebClient.Object, mockLogger);
 
             var value = randomNames.NextHumanNames(10);
             Assert.AreEqual(10, value.Count);
@@ -40,27 +45,5 @@ namespace Willowcat.CharacterGenerator.Core.Tests.IntegrationTests
                 Console.WriteLine("Random Name: " + name.Unidecode());
             }
         }
-
-        //[TestMethod]
-        //[Ignore]
-        //public void RandomBehindTheName_SimpleTest()
-        //{
-        //    RandomBehindTheName randomNames = new RandomBehindTheName(Gender.Female, 10);
-
-        //    string value = randomNames.GetNextName();
-        //    Assert.IsTrue(!string.IsNullOrEmpty(value));
-        //    Console.WriteLine("Random Name: " + value.Unidecode());
-        //}
-
-        //[TestMethod]
-        //[Ignore]
-        //public void RandomBehindTheName_RegionTest()
-        //{
-        //    RandomBehindTheName randomNames = new RandomBehindTheName(Gender.Female, 10);
-
-        //    string value = randomNames.GetNextName(RandomBehindTheName.Regions.Keys.First());
-        //    Assert.IsTrue(!string.IsNullOrEmpty(value));
-        //    Console.WriteLine("Random Name: " + value.Unidecode());
-        //}
     }
 }

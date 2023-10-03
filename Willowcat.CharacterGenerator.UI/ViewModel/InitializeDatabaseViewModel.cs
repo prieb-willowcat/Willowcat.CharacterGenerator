@@ -212,7 +212,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         {
             lock (_MessageLock)
             {
-                Debug.WriteLine(message);
                 StatusMessage = message;
                 if (!string.IsNullOrEmpty(StatusLog))
                 {
@@ -227,7 +226,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             if (!string.IsNullOrEmpty(e.Message)) 
             {
                 var message = $"{e.Migration.GetType().Name}: {e.Message}";
-                LogMessage(message);
                 if (e.Error != null)
                 {
                     LogError(e.Error);
@@ -236,12 +234,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             if (e.MaximumProgress.HasValue)
             {
                 MaximumProgress = e.MaximumProgress.Value;
-                //Debug.WriteLine($"{CurrentProgress} / {MaximumProgress}");
             }
             if (e.CurrentProgress.HasValue)
             {
                 CurrentProgress = e.CurrentProgress.Value;
-                //Debug.WriteLine($"{CurrentProgress} / {MaximumProgress}");
             }
         }
     }

@@ -1,7 +1,7 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.Logging;
+using System.Text;
 using System.Text.Json;
 using Willowcat.CharacterGenerator.Application.Interface;
-using Willowcat.CharacterGenerator.OnlineGenerators;
 using Willowcat.CharacterGenerator.OnlineGenerators.Generator.Json;
 
 namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
@@ -9,13 +9,12 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
 
     public class RandomUiNames
     {
-
         private const int _DefaultAmount = 25;
         private const int _MaximumAmount = 500;
         private const int _MinimumAmount = 1;
         private const string _BaseUrl = "https://uinames.com/api/";
 
-        public static Dictionary<string, string> Regions = new Dictionary<string, string>()
+        private readonly static Dictionary<string, string> _regions = new()
         {
             ["All"] = "all",
             ["Albania"] = "albania",
@@ -43,15 +42,17 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
             ["United States"] = "united+states"
         };
 
-        private readonly List<UiName> _RandomEarthNames = new List<UiName>();
-        private readonly IHttpJsonClient _UiNamesWebClient;
+        private readonly ILogger<RandomUiNames> _logger;
+        private readonly List<UiName> _RandomEarthNames = new();
+        private readonly IHttpJsonClient _uiNamesWebClient;
 
-        public RandomUiNames(IHttpJsonClient webClient)
+        public RandomUiNames(IHttpJsonClient webClient, ILogger<RandomUiNames> logger)
         {
-            _UiNamesWebClient = webClient;
+            _uiNamesWebClient = webClient;
+            _logger = logger;
         }
 
-        private string BuildUrl(Gender gender, string region)
+        private string BuildUrl(Gender gender, string? region)
         {
             StringBuilder urlBuilder = new StringBuilder(_BaseUrl);
             urlBuilder.Append($"?amount={_DefaultAmount}");
@@ -78,10 +79,13 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
             if (!_RandomEarthNames.Any(n => n.IsMatch(gender, region)))
             {
                 var url = BuildUrl(gender, region);
-                var json = _UiNamesWebClient.DownloadJson(url);
-                Console.WriteLine("JSON: " + json);
+                var json = _uiNamesWebClient.DownloadJson(url);
+                _logger.LogDebug("JSON from {url}: {json}", url, json);
                 var names = JsonSerializer.Deserialize<UiName[]>(json);
-                _RandomEarthNames.AddRange(names);
+                if (names != null)
+                {
+                    _RandomEarthNames.AddRange(names);
+                }
             }
 
             string result = _RandomEarthNames.First(n => n.IsMatch(gender, region)).FullName;
@@ -89,9 +93,9 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
             return result;
         }
 
-        public List<string> NextHumanNames(int count, Gender gender = Gender.Random, string region = null)
+        public List<string> NextHumanNames(int count, Gender gender = Gender.Random, string? region = null)
         {
-            List<string> names = new List<string>();
+            List<string> names = new();
             for (int i = 0; i < count; i++)
             {
                 names.Add(NextHumanName(gender, region));

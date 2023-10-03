@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using Willowcat.CharacterGenerator.Application.Extension;
 using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.EntityFramework.Database;
@@ -9,11 +10,16 @@ namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 {
     public class InitialChartDatabaseMigration : IDatabaseMigration<ChartContext>
     {
+        private readonly ILogger<InitialChartDatabaseMigration> _logger;
         private readonly IEnumerable<IChartCollectionRepository> _chartCollectionRepositories;
         private readonly IProgress<ChartSetupMessage>? _progressReporter;
 
-        public InitialChartDatabaseMigration(IEnumerable<IChartCollectionRepository> chartCollectionRepositories, IProgress<ChartSetupMessage>? progressReporter)
+        public InitialChartDatabaseMigration(
+            ILogger<InitialChartDatabaseMigration> logger,
+            IEnumerable<IChartCollectionRepository> chartCollectionRepositories,
+            IProgress<ChartSetupMessage>? progressReporter)
         {
+            _logger = logger;
             _chartCollectionRepositories = chartCollectionRepositories;
             _progressReporter = progressReporter;
         }
@@ -85,7 +91,7 @@ namespace Willowcat.CharacterGenerator.EntityFramework.Migration
                 var existing = context.ChartCollections.Find(collection.CollectionId);
                 if (existing != null)
                 {
-                    Debug.WriteLine($"Chart {collection.CollectionName} with key {collection.CollectionId} already exists");
+                    _logger.LogWarning($"Chart {collection.CollectionName} with key {collection.CollectionId} already exists");
                 }
                 else
                 {
@@ -123,7 +129,7 @@ namespace Willowcat.CharacterGenerator.EntityFramework.Migration
                 var existing = context.Charts.Find(chart.Key);
                 if (existing == null && string.IsNullOrEmpty(chart.ParentKey))
                 {
-                    Debug.WriteLine($"Adding chart {chart.ChartName} ({chart.Key})");
+                    _logger.LogInformation($"Adding chart {chart.ChartName} ({chart.Key})");
                     try
                     {
                         await context.Charts.AddAsync(chart);
@@ -158,14 +164,14 @@ namespace Willowcat.CharacterGenerator.EntityFramework.Migration
                     var chart = context.Charts.Find(option.ChartKey);
                     if (chart == null)
                     {
-                        Debug.WriteLine($"{option.ChartKey}\t{option.ChartKey}\t{option.Range}\t{option.Description}");
+                        _logger.LogTrace($"{option.ChartKey}\t{option.ChartKey}\t{option.Range}\t{option.Description}");
                     }
                     if (!string.IsNullOrEmpty(option.GoToChartKey))
                     {
                         var gotoChart = context.Charts.Find(option.GoToChartKey);
                         if (gotoChart == null)
                         {
-                            Debug.WriteLine($"{option.GoToChartKey}\t{option.ChartKey}\t{option.Range}\t{option.Description}");
+                            _logger.LogTrace($"{option.GoToChartKey}\t{option.ChartKey}\t{option.Range}\t{option.Description}");
                         }
                     }
 
