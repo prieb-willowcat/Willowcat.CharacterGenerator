@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Willowcat.CharacterGenerator.UI.View"
+             xmlns:controls="clr-namespace:Willowcat.CharacterGenerator.UI.View.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             d:DesignHeight="450" d:DesignWidth="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -76,14 +78,20 @@
             </Button>
         </Grid>
         
-        <Label Grid.Row="3" Grid.Column="0" Content="Notes"/>
-        <TextBox 
+        <!--<TextBox 
             Grid.Row="4" 
             Grid.Column="0" 
             AcceptsReturn="True"
             AcceptsTab="True"
             Text="{Binding Notes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
             FontSize="14"
-            TextWrapping="Wrap" />
+            TextWrapping="Wrap" />-->
+        <controls:RichTextBoxEditor
+            Grid.Column="0"
+            Grid.Row="4"
+            Margin="0 4 0 0"
+            XamlDocument="{Binding Notes}">
+        </controls:RichTextBoxEditor>
+
     </Grid>
 </UserControl>

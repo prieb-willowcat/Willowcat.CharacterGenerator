@@ -7,9 +7,9 @@ namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public static class CharacterSerializerExtensions
     {
-        public static CharacterModel DeserializeFromFile(this ICharacterSerializer serializer, IChartRepository businessObject, string fullpath)
+        public static CharacterModel? DeserializeFromFile(this ICharacterSerializer serializer, IChartRepository businessObject, string fullpath)
         {
-            CharacterModel result = null;
+            CharacterModel? result = null;
             if (!string.IsNullOrEmpty(fullpath) && File.Exists(fullpath))
             {
                 string[] lines = File.ReadAllLines(fullpath);

@@ -58,5 +58,29 @@ namespace Willowcat.CharacterGenerator.UI.Properties {
                 this["ResourcesDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LeftColumnWidth {
+            get {
+                return ((double)(this["LeftColumnWidth"]));
+            }
+            set {
+                this["LeftColumnWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double RightColumnWidth {
+            get {
+                return ((double)(this["RightColumnWidth"]));
+            }
+            set {
+                this["RightColumnWidth"] = value;
+            }
+        }
     }
 }

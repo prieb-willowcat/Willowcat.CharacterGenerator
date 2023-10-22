@@ -11,6 +11,7 @@ using Willowcat.CharacterGenerator.Core;
 using Willowcat.CharacterGenerator.Model;
 using System.Collections.ObjectModel;
 using Willowcat.CharacterGenerator.FlatFile.TextRepository;
+using System.Reflection.Metadata;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
@@ -52,7 +53,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             {
                 _characterModel.Notes = value;
                 OnPropertyChanged();
-                OnSaveCharacterDetailsExecute();
             }
         }
         public int SelectedIndex
