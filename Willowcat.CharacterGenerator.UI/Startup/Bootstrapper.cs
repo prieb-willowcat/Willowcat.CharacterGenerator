@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Prism.Events;
 using System;
 using Willowcat.CharacterGenerator.Application.Extension;
-using Willowcat.CharacterGenerator.Core.TextRepository;
 using Willowcat.CharacterGenerator.EntityFramework.Extension;
 using Willowcat.CharacterGenerator.FlatFile.Extension;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.OnlineGenerators.Extension;
 using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
@@ -17,9 +18,9 @@ namespace Willowcat.CharacterGenerator.UI.Startup
         {
             var services = new ServiceCollection();
             services
-                .RegisterConfigurations()
                 .RegisterAppServices()
                 .RegisterApplicationServices()
+                .RegisterLogging()
                 .RegisterEntityFrameworkServices(builder => builder.UseSqlite($"Data Source={Properties.Settings.Default.DatabaseLocation}"))
                 .RegisterFlatFileServices(() => Properties.Settings.Default.ResourcesDirectory)
                 .RegisterOnlineGenerators(() => Environment.GetEnvironmentVariable("BehindTheNamesApiKey", EnvironmentVariableTarget.User))
@@ -30,15 +31,23 @@ namespace Willowcat.CharacterGenerator.UI.Startup
 
         private static ServiceCollection RegisterAppServices(this ServiceCollection services)
         {
-            services.AddTransient<ICharacterSerializer, CharacterFileSerializer>();
             services.AddSingleton<IEventAggregator, EventAggregator>();
             services.AddSingleton(new Random());
             return services;
         }
 
-        private static ServiceCollection RegisterConfigurations(this ServiceCollection services)
+        private static ServiceCollection RegisterLogging(this ServiceCollection services)
         {
-            services.AddSingleton(App.DatabaseConfiguration);
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder
+                    .ClearProviders()
+                    .AddFilter("Willowcat.CharacterGenerator", LogLevel.Debug)
+                    .AddFilter("Willowcat.Common", LogLevel.Warning)
+                    //.AddDebugConsole()
+                    .AddFile("app.log");
+            });
+
             return services;
         }
 

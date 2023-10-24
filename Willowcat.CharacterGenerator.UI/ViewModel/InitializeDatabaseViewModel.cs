@@ -4,8 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
 using Willowcat.CharacterGenerator.EntityFramework.Migration;
+using Willowcat.CharacterGenerator.Model.Progress;
 using Willowcat.Common.UI.ViewModels;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
@@ -114,7 +114,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             StatusLog = "Willowcat.CharacterGenerator" + Environment.NewLine + StatusMessage;
         }
 
-        public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseConfiguration configuration, DatabaseMigrationService databaseMigrationService)
+        public InitializeDatabaseViewModel(Progress<ChartSetupMessage> progressReporter, DatabaseMigrationService databaseMigrationService)
         {
             _databaseMigrationService = databaseMigrationService;
             progressReporter.ProgressChanged += ProgressReporter_ProgressChanged;
@@ -212,7 +212,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
         {
             lock (_MessageLock)
             {
-                Debug.WriteLine(message);
                 StatusMessage = message;
                 if (!string.IsNullOrEmpty(StatusLog))
                 {
@@ -227,7 +226,6 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             if (!string.IsNullOrEmpty(e.Message)) 
             {
                 var message = $"{e.Migration.GetType().Name}: {e.Message}";
-                LogMessage(message);
                 if (e.Error != null)
                 {
                     LogError(e.Error);
@@ -236,12 +234,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             if (e.MaximumProgress.HasValue)
             {
                 MaximumProgress = e.MaximumProgress.Value;
-                //Debug.WriteLine($"{CurrentProgress} / {MaximumProgress}");
             }
             if (e.CurrentProgress.HasValue)
             {
                 CurrentProgress = e.CurrentProgress.Value;
-                //Debug.WriteLine($"{CurrentProgress} / {MaximumProgress}");
             }
         }
     }

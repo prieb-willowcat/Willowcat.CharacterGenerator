@@ -1,4 +1,4 @@
-﻿namespace Willowcat.CharacterGenerator.Core
+﻿namespace Willowcat.CharacterGenerator.Application.Interface
 {
     public interface IHttpJsonClient
     {

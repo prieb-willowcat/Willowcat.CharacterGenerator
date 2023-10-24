@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Willowcat.CharacterGenerator.Application.Interface;
 
-namespace Willowcat.CharacterGenerator.BehindTheName.Generator
+namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
 {
     public class RandomBehindTheName : INameGenerator
     {
@@ -22,7 +21,7 @@ namespace Willowcat.CharacterGenerator.BehindTheName.Generator
         /// <summary>
         /// https://www.behindthename.com/api/appendix2.php
         /// </summary>
-        public static Dictionary<string, string> Regions = new Dictionary<string, string>()
+        private readonly static Dictionary<string, string> _regions = new Dictionary<string, string>()
         {
             ["afr"] = "African",
             ["alb"] = "Albanian",
@@ -100,6 +99,8 @@ namespace Willowcat.CharacterGenerator.BehindTheName.Generator
             _SelectedGender = gender;
             _WebClient = webClient;
         }
+
+        public Dictionary<string, string> Regions => _regions;
 
         public bool ShowRegionSelector => true;
 

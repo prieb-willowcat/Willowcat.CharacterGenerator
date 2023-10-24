@@ -10,15 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\arrow-090.png" />
-    <None Remove="Resources\arrow-270.png" />
+    <Resource Include="customwords.lex" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="4.3.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.7" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="Willowcat.Common.UI" Version="2.5.0" />
@@ -39,11 +39,6 @@
     <Reference Include="Willowcat.Common.UiServices">
       <HintPath>..\..\Willowcat.Common\UiServices\bin\Debug\Willowcat.Common.UiServices.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\arrow-090.png" />
-    <Resource Include="Resources\arrow-270.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,6 +69,10 @@
     <None Update="wand-hat.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

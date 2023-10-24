@@ -59,25 +59,5 @@ namespace Willowcat.CharacterGenerator.UI.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] arrow_090 {
-            get {
-                object obj = ResourceManager.GetObject("arrow_090", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] arrow_270 {
-            get {
-                object obj = ResourceManager.GetObject("arrow_270", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

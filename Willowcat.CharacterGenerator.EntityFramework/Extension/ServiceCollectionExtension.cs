@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Data;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.EntityFramework.Database;
 using Willowcat.CharacterGenerator.EntityFramework.Migration;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 
 namespace Willowcat.CharacterGenerator.EntityFramework.Extension
 {

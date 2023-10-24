@@ -1,7 +1,7 @@
 ﻿using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
 
-namespace Willowcat.CharacterGenerator.Core.Randomizer
+namespace Willowcat.CharacterGenerator.Application.Mythic
 {
     public class MythicFateChart : ChartModel
     {
@@ -66,11 +66,11 @@ namespace Willowcat.CharacterGenerator.Core.Randomizer
         private string FormatChartKey(int chaosRank, MythicFateOdds? odds = null)
         {
             return odds.HasValue ? $"MythicFate_{chaosRank}_{odds}" : $"MythicFate_{chaosRank}";
-        } 
+        }
 
         private static void LoadFatePercentages()
         {
-            string[] lines = Application.Properties.Resources.MythicFateChart.Split('\n');
+            string[] lines = Properties.Resources.MythicFateChart.Split('\n');
             foreach (string line in lines)
             {
                 string[] fields = line.Trim().Split('\t');

@@ -1,7 +1,6 @@
-﻿using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+﻿using Willowcat.CharacterGenerator.Application.Interface;
 
-namespace Willowcat.CharacterGenerator.BehindTheName.Generator
+namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator
 {
     public class RandomElvenNames : INameGenerator
     {
@@ -14,6 +13,8 @@ namespace Willowcat.CharacterGenerator.BehindTheName.Generator
         {
             _webClient = webClient;
         }
+
+        public Dictionary<string, string> Regions { get; } = new Dictionary<string, string>();
 
         public bool ShowRegionSelector => false;
 

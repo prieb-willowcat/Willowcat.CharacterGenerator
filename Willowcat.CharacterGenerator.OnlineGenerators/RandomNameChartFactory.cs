@@ -1,30 +1,34 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.BehindTheName.Generator;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Microsoft.Extensions.Logging;
+using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.OnlineGenerators.Generator;
 
-namespace Willowcat.CharacterGenerator.Core.Models
+namespace Willowcat.CharacterGenerator.OnlineGenerators
 {
     public class RandomNameChartFactory : IChartCollectionRepository, IAutoGeneratorFactory
     {
         private readonly IServiceProvider _provider;
+        private readonly ILogger<RandomNameChartFactory> _logger;
         private readonly Func<string> _getBehindTheNameApiKey;
+        private Dictionary<string, RandomNameChart>? _nameCharts = null;
+        private static readonly object _lock = new object(); 
 
-        public RandomNameChartFactory(IServiceProvider provider, Func<string> getBehindTheNameApiKey)
+        public RandomNameChartFactory(IServiceProvider provider, ILogger<RandomNameChartFactory> logger, Func<string> getBehindTheNameApiKey)
         {
             _provider = provider;
+            _logger = logger;
             _getBehindTheNameApiKey = getBehindTheNameApiKey;
         }
 
         public Task<IEnumerable<ChartModel>> BuildChartsAsync(CancellationToken cancellationToken = default)
         {
-            IEnumerable<ChartModel> charts = new List<ChartModel>() 
+            InitializeCharts();
+            IEnumerable<ChartModel> charts = Array.Empty<ChartModel>();
+            if (_nameCharts != null)
             {
-                GetChart(NameCategory.Elvish),
-                GetChart(NameCategory.Human_Female),
-                GetChart(NameCategory.Human_Male)
-            };
-
+                charts = _nameCharts.Values;
+            }
             return Task.FromResult(charts);
         }
 
@@ -37,62 +41,74 @@ namespace Willowcat.CharacterGenerator.Core.Models
 
         public ChartModel GetAutoGeneratingChart(ChartModel chart)
         {
-            if (CanAutoGenerate(chart))
+            InitializeCharts();
+            if (_nameCharts != null && _nameCharts.TryGetValue(chart.Key, out RandomNameChart? randomNameChart))
             {
-                switch(chart.Key)
+                if (randomNameChart != null)
                 {
-                    case "names-elven": return GetChart(NameCategory.Elvish, true);
-                    case "names-female": return GetChart(NameCategory.Human_Female, true);
-                    case "names-male": return GetChart(NameCategory.Human_Male, true);
+                    chart = randomNameChart;
                 }
             }
 
             return chart;
         }
 
-        public RandomNameChart GetChart(NameCategory nameCategory, bool loadRegions = false)
-        {
-            INameGenerator? nameGenerator = GetNameGenerator(nameCategory);
-            RandomNameChart? chart = null;
-            if (nameGenerator != null)
-            {
-                switch (nameCategory)
-                {
-                    case NameCategory.Elvish:
-                        chart = new RandomNameChart(nameGenerator, "names-elven", "Elf Names");
-                        break;
-
-                    case NameCategory.Human_Female:
-                        chart = new RandomNameChart(nameGenerator, "names-female", "Female Names");
-                        break;
-
-                    case NameCategory.Human_Male:
-                        chart = new RandomNameChart(nameGenerator, "names-male", "Male Names");
-                        break;
-                }
-
-                if (chart != null && nameGenerator.ShowRegionSelector && loadRegions)
-                {
-                    foreach (var kvp in RandomBehindTheName.Regions)
-                    {
-                        chart.Regions[kvp.Key] = kvp.Value;
-                    }
-                }
-            }
-            return chart;
-        }
-
-        public INameGenerator? GetNameGenerator(NameCategory nameCategory)
+        private RandomNameChart? CreateRandomNameChart(NameCategory nameCategory)
         {
             string? key = _getBehindTheNameApiKey != null ? _getBehindTheNameApiKey() : null;
             var httpClient = _provider.GetRequiredService<IHttpJsonClient>();
-            return nameCategory switch
+            RandomNameChart? chart = null;
+            switch (nameCategory)
             {
-                NameCategory.Elvish => new RandomElvenNames(httpClient),
-                NameCategory.Human_Female => new RandomBehindTheName(httpClient, key, Gender.Female, 18),
-                NameCategory.Human_Male => new RandomBehindTheName(httpClient, key, Gender.Male, 18),
-                _ => null
-            };
+                case NameCategory.Elvish:
+                    chart = new RandomNameChart(new RandomElvenNames(httpClient), "names-elven", "Elf Names");
+                    break;
+
+                case NameCategory.Human_Female:
+                    if (!string.IsNullOrEmpty(key)) 
+                    {
+                        var generator = new RandomBehindTheName(httpClient, key, Gender.Female, 18);
+                        chart = new RandomNameChart(generator, "names-female", "Female Names");
+                    }
+                    break;
+
+                case NameCategory.Human_Male:
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        var generator = new RandomBehindTheName(httpClient, key, Gender.Male, 18);
+                        chart = new RandomNameChart(generator, "names-male", "Male Names");
+                    }
+                    break;
+            }
+            return chart;
+        }
+
+        private void InitializeCharts()
+        {
+            lock (_lock)
+            {
+                if (_nameCharts == null)
+                {
+                    _nameCharts = new Dictionary<string, RandomNameChart>();
+
+                    try
+                    {
+                        var categories = Enum.GetValues<NameCategory>();
+                        foreach (var category in categories)
+                        {
+                            var chart = CreateRandomNameChart(category);
+                            if (chart != null)
+                            {
+                                _nameCharts[chart.Key] = chart;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Unable to initialize charts.");
+                    }
+                }
+            }
         }
     }
 }

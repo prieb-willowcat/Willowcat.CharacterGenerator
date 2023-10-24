@@ -1,6 +1,7 @@
-﻿using Willowcat.CharacterGenerator.Model;
+﻿using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.Randomizer
+namespace Willowcat.CharacterGenerator.Application.Mythic
 {
     public class MythicAutoGeneratorFactory : IAutoGeneratorFactory, IChartCollectionRepository
     {

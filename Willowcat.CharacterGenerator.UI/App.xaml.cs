@@ -1,5 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.TextRepository;
-using System;
+﻿using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,6 +7,7 @@ using Willowcat.CharacterGenerator.UI.Startup;
 using Willowcat.CharacterGenerator.Core;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 
 namespace Willowcat.CharacterGenerator.UI
 {
@@ -16,39 +16,6 @@ namespace Willowcat.CharacterGenerator.UI
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        private static DatabaseConfiguration _DatabaseConfiguration;
-
-        public static DatabaseConfiguration DatabaseConfiguration
-        {
-            get
-            {
-                if (_DatabaseConfiguration == null)
-                {
-                    string behindTheNamesApiKey = Environment.GetEnvironmentVariable("BehindTheNamesApiKey", EnvironmentVariableTarget.User);
-                    if (string.IsNullOrEmpty(behindTheNamesApiKey))
-                    {
-                        //TODO: log this.
-                        //throw new ApiKeyNotFoundException("'BehindTheNamesApiKey' Enviroment Variable required to load the charts.");
-                    }
-                    if (string.IsNullOrEmpty(UI.Properties.Settings.Default.DatabaseLocation))
-                    {
-                        var parentPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
-                        UI.Properties.Settings.Default.DatabaseLocation = Path.Combine(parentPath, "Willowcat.CharacterGenerator", "charts.db");
-                    }
-                    if (string.IsNullOrEmpty(UI.Properties.Settings.Default.ResourcesDirectory))
-                    {
-                        var parentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                        UI.Properties.Settings.Default.ResourcesDirectory = Path.Combine(parentPath, "Willowcat.CharacterGenerator", "Resources");
-                    }
-                    _DatabaseConfiguration = new DatabaseConfiguration()
-                    {
-                        BehindTheNameApiKey = behindTheNamesApiKey
-                    };
-                }
-                return _DatabaseConfiguration;
-            }
-        }
-
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var serviceProvider = Bootstrapper.CreateApp();

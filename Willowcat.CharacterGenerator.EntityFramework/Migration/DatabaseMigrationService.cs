@@ -1,5 +1,6 @@
-﻿using Willowcat.CharacterGenerator.Core.Data;
-using Willowcat.CharacterGenerator.Core.Models;
+﻿using Willowcat.CharacterGenerator.EntityFramework.Database;
+using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Progress;
 
 namespace Willowcat.CharacterGenerator.EntityFramework.Migration
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Willowcat.CharacterGenerator.Core.Data
+namespace Willowcat.CharacterGenerator.Model.Progress
 {
     public class ChartSetupMessage
     {

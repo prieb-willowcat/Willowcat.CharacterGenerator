@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Randomizer;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.Application.Mythic;
 
 namespace Willowcat.CharacterGenerator.Application.Extension
 {

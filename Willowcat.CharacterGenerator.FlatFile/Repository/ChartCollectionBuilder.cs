@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using Willowcat.CharacterGenerator.Core.Data;
-using Willowcat.CharacterGenerator.Core.Models;
-using Willowcat.CharacterGenerator.Core.TextRepository;
+using Willowcat.CharacterGenerator.Application.Interface;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.Model;
+using Willowcat.CharacterGenerator.Model.Progress;
 
-namespace Willowcat.CharacterGenerator.Core
+namespace Willowcat.CharacterGenerator.FlatFile.Repository
 {
     public class ChartCollectionBuilder : IChartCollectionRepository
     {

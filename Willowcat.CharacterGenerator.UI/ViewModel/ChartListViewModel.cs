@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Willowcat.CharacterGenerator.Core;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 using Willowcat.CharacterGenerator.UI.Event;
 using Willowcat.Common.UI.ViewModels;
 

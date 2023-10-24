@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class CharacterFileSerializer : ICharacterSerializer
     {
@@ -17,26 +16,39 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
 
         public CharacterModel Deserialize(IChartRepository businessObject, IEnumerable<string> lines)
         {
+            CharacterModel? model = null;
             if (lines.Any(text => text.Contains("|")))
             {
-                return _NewPipeFileSerializer.Deserialize(businessObject, lines);
+                model = _NewPipeFileSerializer.Deserialize(businessObject, lines);
             }
             else
             {
-                return _OldFlatFileSerializer.Deserialize(businessObject, lines);
+                model = _OldFlatFileSerializer.Deserialize(businessObject, lines);
             }
+            return PostProcessing(model);
         }
 
         public CharacterModel Deserialize(IChartRepository businessObject, string text)
         {
+            CharacterModel? model = null;
             if (text.Contains("|"))
             {
-                return _NewPipeFileSerializer.Deserialize(businessObject, text);
+                model = _NewPipeFileSerializer.Deserialize(businessObject, text);
             }
             else
             {
-                return _OldFlatFileSerializer.Deserialize(businessObject, text);
+                model = _OldFlatFileSerializer.Deserialize(businessObject, text);
             }
+            return PostProcessing(model);
+        }
+
+        private static CharacterModel PostProcessing(CharacterModel model)
+        {
+            if (!model.Notes.StartsWith("<"))
+            {
+                model.Notes = $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"><Paragraph>{model.Notes.Replace("\n", "</Paragraph>\n<Paragraph>")}</Paragraph></FlowDocument>";
+            }
+            return model;
         }
 
         public string Serialize(CharacterModel character)

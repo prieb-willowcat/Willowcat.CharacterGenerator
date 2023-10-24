@@ -1,6 +1,4 @@
-﻿using Willowcat.CharacterGenerator.Core.Randomizer;
-
-namespace Willowcat.CharacterGenerator.BehindTheName.Generator.Json
+﻿namespace Willowcat.CharacterGenerator.OnlineGenerators.Generator.Json
 {
     public class UiName
     {

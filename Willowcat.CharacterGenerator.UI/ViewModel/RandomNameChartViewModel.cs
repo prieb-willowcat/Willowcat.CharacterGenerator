@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Willowcat.CharacterGenerator.Core;
-using Willowcat.CharacterGenerator.Core.Models;
+using Willowcat.CharacterGenerator.EntityFramework.Repository;
 using Willowcat.CharacterGenerator.Model;
 using Willowcat.CharacterGenerator.Model.Extension;
+using Willowcat.CharacterGenerator.OnlineGenerators;
 
 namespace Willowcat.CharacterGenerator.UI.ViewModel
 {
@@ -51,18 +51,18 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public override bool ShowRegionSelector => _randomNameChart.ShowRegionSelector;
+        public override bool ShowRegionSelector => _randomNameChart.NameGenerator.ShowRegionSelector;
 
         public override void Initialize(int? selectedRange)
         {
             ObservableCollection<RegionOption> newRegionOptions = new ObservableCollection<RegionOption>();
             RegionOption selectedRegionOption = null;
 
-            if (_randomNameChart.Regions != null)
+            if (_randomNameChart.NameGenerator.Regions != null)
             {
                 string lastRegionSelected = Properties.Settings.Default.LastRegionSelected;
 
-                foreach (var kvp in _randomNameChart.Regions)
+                foreach (var kvp in _randomNameChart.NameGenerator.Regions)
                 {
                     var option = new RegionOption(kvp.Key, kvp.Value);
                     newRegionOptions.Add(option);

@@ -18,8 +18,6 @@ namespace Willowcat.CharacterGenerator.UI
             InitializeComponent();
             _ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             DataContext = _ViewModel;
-
-            _UserInterfaceSettings.MainWindowState.ApplyToWindow(this);
         }
 
         private void CloseCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -96,6 +94,9 @@ namespace Willowcat.CharacterGenerator.UI
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Properties.Settings.Default.LeftColumnWidth = leftColumn.Width.Value;
+            Properties.Settings.Default.RightColumnWidth = rightColumn.Width.Value;
+
             bool continueWithClose = await WarnIfUnsavedChanges();
             if (!continueWithClose)
             {
@@ -109,6 +110,15 @@ namespace Willowcat.CharacterGenerator.UI
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            _UserInterfaceSettings.MainWindowState.ApplyToWindow(this);
+            if (Properties.Settings.Default.LeftColumnWidth > leftColumn.MinWidth)
+            {
+                leftColumn.Width = new GridLength(Properties.Settings.Default.LeftColumnWidth);
+            }
+            if (Properties.Settings.Default.RightColumnWidth > rightColumn.MinWidth)
+            {
+                rightColumn.Width = new GridLength(Properties.Settings.Default.RightColumnWidth);
+            }
             await _ViewModel.LoadDataAsync();
         }
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:Willowcat.CharacterGenerator.UI.View"
         xmlns:commands="clr-namespace:Willowcat.CharacterGenerator.UI.Commands"
+        xmlns:controls="clr-namespace:Willowcat.CharacterGenerator.UI.View.Controls"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="1000"
         Loaded="Window_Loaded"
@@ -41,10 +42,9 @@
         </Grid.RowDefinitions>
 
         <Menu>
-            <MenuItem Header="_File Commands">
+            <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="commands:CustomCommands.New" InputGestureText="Ctrl+N" />
                 <Separator/>
-                <MenuItem Header="Reload Charts" Command="{Binding ReloadChartsCommand}" InputGestureText="F5" />
                 <MenuItem Header="_Open" Command="ApplicationCommands.Open"/>
                 <MenuItem Header="_Save" Command="ApplicationCommands.Save"/>
                 <MenuItem Header="Save _As" Command="ApplicationCommands.SaveAs"/>
@@ -52,58 +52,68 @@
                 <MenuItem Header="_Close" Command="ApplicationCommands.Close" InputGestureText="Ctrl+W" />
             </MenuItem>
             <MenuItem Header="Tools">
+                <MenuItem Header="Reload Charts" Command="{Binding ReloadChartsCommand}" InputGestureText="F5" />
             </MenuItem>
         </Menu>
 
         <Grid
             Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="450" />
+                <ColumnDefinition Width="300" x:Name="leftColumn" MinWidth="100" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="400" />
-                <!--<ColumnDefinition Width="{Binding ShowDetailView, Converter={StaticResource BooleanToToggleWidthConverter}}" />-->
             </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <GridSplitter Grid.Column="0" Grid.RowSpan="2"
-                      Background="Black"
-                      Width="5"
+            <GridSplitter Grid.Column="0"
+                      Background="Blue"
+                      Width="2"
                       HorizontalAlignment="Right"
-                      VerticalAlignment="Stretch" />
-
-            <GridSplitter Grid.Column="2" Grid.RowSpan="2"
-                      Background="Black"
-                      Width="5"
-                      HorizontalAlignment="Left"
                       VerticalAlignment="Stretch" />
 
             <view:CharacterDetailsView 
                 Grid.Column="0"
-                Grid.RowSpan="2"
                 Margin="5"
                 DataContext="{Binding CharacterDetailsViewModel}" />
 
-            <view:ChartHistoryView
+            <TabControl 
                 Grid.Column="1"
-                Grid.Row="0"
-                Margin="5 0 5 0"
-                DataContext="{Binding ChartHistoryViewModel}" />
+                Margin="5 0 5 5">
+                <TabItem Header="Random Charts">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="300" x:Name="rightColumn" MinWidth="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        
+                        <view:ChartHistoryView 
+                            Grid.Row="0"
+                            DataContext="{Binding ChartHistoryViewModel}" />
+                        
+                        <view:ChartView 
+                            Grid.Row="1"
+                            DataContext="{Binding SelectedChart}" />
 
-            <view:ChartView
-                Grid.Column="1"
-                Grid.Row="1"
-                Margin="5 0 5 0"
-                DataContext="{Binding SelectedChart}" />
+                        <GridSplitter Grid.Column="1"
+                            Grid.RowSpan="2"
+                            Background="Blue"
+                            Width="2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch" />
 
-            <view:ChartListView
-                Grid.Column="2"
-                Grid.RowSpan="2"
-                Margin="5"
-                DataContext="{Binding ChartListViewModel}" />
+                        <view:ChartListView
+                            Grid.Column="1"
+                            Grid.RowSpan="2"
+                            Margin="5"
+                            DataContext="{Binding ChartListViewModel}" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Character Notes">
+                    <controls:RichTextBoxEditor XamlDocument="{Binding CharacterDetailsViewModel.Notes}" />
+                </TabItem>
+            </TabControl>
         </Grid>
 
     </Grid>

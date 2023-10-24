@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Willowcat.CharacterGenerator.Core.Models;
+﻿using System.Text.RegularExpressions;
+using Willowcat.CharacterGenerator.Application.Extension;
+using Willowcat.CharacterGenerator.FlatFile.Repository;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class ChartFlatFileSerializer
     {
@@ -106,7 +104,7 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
                 if (parentKeyMarkerIndex > 0)
                 {
                     model.Key = line.Substring(1, parentKeyMarkerIndex - 1).Trim();
-                    model.ParentKey = line.Substring(parentKeyMarkerIndex+1).Trim();
+                    model.ParentKey = line.Substring(parentKeyMarkerIndex + 1).Trim();
                 }
                 else
                 {

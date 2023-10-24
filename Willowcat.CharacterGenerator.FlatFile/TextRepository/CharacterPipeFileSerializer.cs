@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Willowcat.CharacterGenerator.Application.Interface;
 using Willowcat.CharacterGenerator.Model;
 
-namespace Willowcat.CharacterGenerator.Core.TextRepository
+namespace Willowcat.CharacterGenerator.FlatFile.TextRepository
 {
     public class CharacterPipeFileSerializer : ICharacterSerializer
     {
@@ -40,7 +41,7 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
                         result.Notes = value.Trim();
                         ProcessAsNote = true;
                     }
-                    else 
+                    else
                     {
                         if (key.Equals(_OptionKey, StringComparison.OrdinalIgnoreCase))
                         {
@@ -103,7 +104,7 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
 
         private string ExtractStringOrDefault(string[] fields, int index, string defaultString)
         {
-            return (index < fields.Length) ? fields[index] : defaultString;
+            return index < fields.Length ? fields[index] : defaultString;
         }
 
         private string GetDetailString(SelectedOption detail)
@@ -120,11 +121,11 @@ namespace Willowcat.CharacterGenerator.Core.TextRepository
         {
             string[] fields = value.Trim().Split('|');
 
-            string chartKey       = ExtractStringOrDefault(fields, 0, string.Empty);
+            string chartKey = ExtractStringOrDefault(fields, 0, string.Empty);
             string parentChartKey = ExtractStringOrDefault(fields, 1, string.Empty);
-            DiceRange range       = ExtractRangeOrDefault (fields, 2, new DiceRange(0));
-            string description    = ExtractStringOrDefault(fields, 3, string.Empty);
-            string chartName      = businessObject.GetChart(chartKey)?.ChartName;
+            DiceRange range = ExtractRangeOrDefault(fields, 2, new DiceRange(0));
+            string description = ExtractStringOrDefault(fields, 3, string.Empty);
+            string chartName = businessObject.GetChart(chartKey)?.ChartName;
 
             if (chartName == null && chartKey.EndsWith("A"))
             {
