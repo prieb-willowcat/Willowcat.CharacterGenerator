@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Willowcat.CharacterGenerator.UI.View"
-             xmlns:controls="clr-namespace:Willowcat.CharacterGenerator.UI.View.Controls"
              mc:Ignorable="d" 
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              d:DesignHeight="450" d:DesignWidth="400">
@@ -12,8 +11,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -67,31 +64,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Button Grid.Row="0" Command="{Binding MoveRowUpCommand}">
-                <StackPanel>
-                    <Image Source="../Resources/arrow-090.png" />
-                </StackPanel>
+                <fa:FontAwesome Icon="ArrowUp" />
             </Button>
             <Button Grid.Row="1" Command="{Binding MoveRowDownCommand}">
-                <StackPanel>
-                    <Image Source="../Resources/arrow-270.png" />
-                </StackPanel>
+                <fa:FontAwesome Icon="ArrowDown" />
             </Button>
         </Grid>
-        
-        <!--<TextBox 
-            Grid.Row="4" 
-            Grid.Column="0" 
-            AcceptsReturn="True"
-            AcceptsTab="True"
-            Text="{Binding Notes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            FontSize="14"
-            TextWrapping="Wrap" />-->
-        <controls:RichTextBoxEditor
-            Grid.Column="0"
-            Grid.Row="4"
-            Margin="0 4 0 0"
-            XamlDocument="{Binding Notes}">
-        </controls:RichTextBoxEditor>
 
     </Grid>
 </UserControl>
