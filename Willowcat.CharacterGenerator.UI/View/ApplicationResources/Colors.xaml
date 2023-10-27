@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="PrimaryBrushDarker" Color="#06434c" />
+    <SolidColorBrush x:Key="PrimaryBrushDark" Color="#006171" />
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#0e8394" />
+    <SolidColorBrush x:Key="PrimaryBrushLight" Color="#6bc5d3" />
+    <SolidColorBrush x:Key="PrimaryBrushLighter" Color="#b5eaf2" />
+    <SolidColorBrush x:Key="PrimaryBrushBright" Color="#11a8bf" />
+    <SolidColorBrush x:Key="PrimaryBrushBrighter" Color="#14c9e5" />
+
+    <SolidColorBrush x:Key="SecondaryBrushDarker" Color="#fcd732" />
+    <SolidColorBrush x:Key="SecondaryBrushDark" Color="#fce57e" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="#fceeb1" />
+    <SolidColorBrush x:Key="SecondaryBrushLight" Color="#fdf4c9" />
+    <SolidColorBrush x:Key="SecondaryBrushLighter" Color="#fef9e5" />
+
+    <SolidColorBrush x:Key="LightTextColor" Color="White" />
+    <SolidColorBrush x:Key="MutedTextColor" Color="Black" />
+    <SolidColorBrush x:Key="DarkTextColor" Color="Black" />
+
+    <SolidColorBrush x:Key="ErrorBrush" Color="#b2233d" />
+    <SolidColorBrush x:Key="ErrorTextColor" Color="White" />
+
+</ResourceDictionary>

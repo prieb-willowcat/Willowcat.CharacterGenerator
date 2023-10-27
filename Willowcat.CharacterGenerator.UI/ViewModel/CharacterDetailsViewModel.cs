@@ -73,6 +73,8 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 OnPropertyChanged();
             }
         }
+        public ICommand DeleteRowCommand { get; private set; }
+        public ICommand NavigateToSelectedItemCommand { get; private set; }
         public ICommand MoveRowDownCommand { get; private set; }
         public ICommand MoveRowUpCommand { get; private set; }
         public ICommand SaveCharacterDetailsCommand { get; private set; }
@@ -89,8 +91,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
             DetailOptionCollection = new ObservableCollection<SelectedOption>(_characterModel.Details);
 
+            NavigateToSelectedItemCommand = new DelegateCommand<object>(OnNavigateToSelectedItemExecute);
             MoveRowDownCommand = new DelegateCommand(OnMoveRowDownExecute);
             MoveRowUpCommand = new DelegateCommand(OnMoveRowUpExecute);
+            DeleteRowCommand = new DelegateCommand(OnDeleteRowExecute);
             SaveCharacterDetailsCommand = new DelegateCommand(OnSaveCharacterDetailsExecute);
 
             _eventAggregator.GetEvent<OptionSelectedEvent>().Subscribe(AddSelectedOptionEvent);
@@ -141,13 +145,21 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
+        private void OnDeleteRowExecute()
+        {
+            DetailOptionCollection.RemoveAt(SelectedIndex);
+        }
+
         private void OnMoveRowDownExecute() => MoveSelectedItems(1);
 
         private void OnMoveRowUpExecute() => MoveSelectedItems(-1);
 
-        public void OnNavigateToSelectedItemExecute(SelectedOption option)
+        private void OnNavigateToSelectedItemExecute(object value)
         {
-            _eventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
+            if (value is SelectedOption option)
+            {
+                _eventAggregator.GetEvent<ChartSelectedEvent>().Publish(new ChartSelectedEventArgs(option.ChartKey, option.Range.Start));
+            }
         }
 
         private async void OnSaveCharacterDetailsExecute() => await SaveCharacterDetailsAsync();

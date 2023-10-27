@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Willowcat.CharacterGenerator.UI.View.ApplicationResources">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Willowcat.CharacterGenerator.UI;component/View/ApplicationResources/Colors.xaml" />
         <ResourceDictionary Source="/Willowcat.CharacterGenerator.UI;component/View/ApplicationResources/ApplicationCommandsDictionary.xaml" />
         <ResourceDictionary Source="/Willowcat.CharacterGenerator.UI;component/View/ApplicationResources/DefaultStylesDictionary.xaml" />
     </ResourceDictionary.MergedDictionaries>    

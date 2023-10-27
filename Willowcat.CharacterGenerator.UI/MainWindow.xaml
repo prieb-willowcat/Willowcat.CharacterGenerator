@@ -64,7 +64,7 @@
             </Grid.ColumnDefinitions>
 
             <GridSplitter Grid.Column="0"
-                      Background="Blue"
+                      Background="{StaticResource PrimaryBrush}"
                       Width="2"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Stretch" />
@@ -98,7 +98,7 @@
 
                         <GridSplitter Grid.Column="1"
                             Grid.RowSpan="2"
-                            Background="Blue"
+                            Background="{StaticResource PrimaryBrush}"
                             Width="2"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch" />

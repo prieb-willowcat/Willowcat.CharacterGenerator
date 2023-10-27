@@ -30,7 +30,7 @@
         <Setter Property="BorderThickness" Value="1" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding HasError}" Value="True">
-                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>

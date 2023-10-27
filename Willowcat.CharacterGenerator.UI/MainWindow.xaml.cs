@@ -94,9 +94,6 @@ namespace Willowcat.CharacterGenerator.UI
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Properties.Settings.Default.LeftColumnWidth = leftColumn.Width.Value;
-            Properties.Settings.Default.RightColumnWidth = rightColumn.Width.Value;
-
             bool continueWithClose = await WarnIfUnsavedChanges();
             if (!continueWithClose)
             {
@@ -104,6 +101,9 @@ namespace Willowcat.CharacterGenerator.UI
             }
             else
             {
+                Properties.Settings.Default.LeftColumnWidth = leftColumn.Width.Value;
+                Properties.Settings.Default.RightColumnWidth = rightColumn.Width.Value;
+                Properties.Settings.Default.Save();
                 _UserInterfaceSettings.SaveMainWindowState(this);
             }
         }

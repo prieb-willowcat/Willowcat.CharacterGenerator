@@ -51,11 +51,9 @@
                                 </Style>
                             </TextBlock.Style>-->
                         </TextBlock>
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding HasMatchingItems,Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text=" [" Foreground="Blue" />
-                            <TextBlock Text="{Binding FilteredCount}" Foreground="Blue" />
-                            <TextBlock Text="]" Foreground="Blue" />
-                        </StackPanel>
+                        <TextBlock Visibility="{Binding HasMatchingItems,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Text="{Binding FilteredCount, StringFormat=' [{0}]'}"
+                                   Foreground="{StaticResource PrimaryBrushBright}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodel:ChartListChartViewModel}" ItemsSource="{Binding SubCharts}">
