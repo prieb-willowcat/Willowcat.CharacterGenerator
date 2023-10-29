@@ -14,6 +14,9 @@
         <CommandBinding Command="commands:CustomCommands.New"
                     Executed="NewCommandBinding_Executed" 
                     CanExecute="NewCommandBinding_CanExecute" />
+        <CommandBinding Command="commands:CustomCommands.DiceRoller"
+                    Executed="DiceRollerCommandBinding_Executed" 
+                    CanExecute="DiceRollerCommandBinding_CanExecute" />
         <CommandBinding Command="ApplicationCommands.Close" 
                     Executed="CloseCommandBinding_Executed" 
                     CanExecute="CloseCommandBinding_CanExecute"/>
@@ -28,12 +31,13 @@
                     CanExecute="SaveAsCommandBinding_CanExecute"/>
     </Window.CommandBindings>
     <Window.InputBindings>
-        <KeyBinding Key="F5" Command="{Binding ReloadChartsCommand}" />
         <KeyBinding Gesture="Ctrl+N" Command="commands:CustomCommands.New"/>
         <KeyBinding Gesture="Ctrl+W" Command="ApplicationCommands.Close"/>
         <KeyBinding Gesture="Ctrl+O" Command="ApplicationCommands.Open"/>
         <KeyBinding Gesture="Ctrl+S" Command="ApplicationCommands.Save"/>
         <KeyBinding Gesture="Ctrl+Shift+S" Command="ApplicationCommands.SaveAs"/>
+        <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadChartsCommand}" />
+        <KeyBinding Gesture="F6" Command="commands:CustomCommands.DiceRoller"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -52,7 +56,8 @@
                 <MenuItem Header="_Close" Command="ApplicationCommands.Close" InputGestureText="Ctrl+W" />
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Reload Charts" Command="{Binding ReloadChartsCommand}" InputGestureText="F5" />
+                <MenuItem Header="Reload Charts" Command="{Binding ReloadChartsCommand}" InputGestureText="Ctrl+R" />
+                <MenuItem Header="Dice Roller..." Command="commands:CustomCommands.DiceRoller"  InputGestureText="F6" />
             </MenuItem>
         </Menu>
 

@@ -14,5 +14,15 @@
 
         public static bool InsideRange(this DiceRange @this, int result)
             => result >= @this.Start && result <= @this.End;
+
+        public static string FormatDice(this Dice @this, string? modifierOperator = null, int? modifier = null)
+        {
+            string diceText = @this.ToString();
+            if (!string.IsNullOrEmpty(modifierOperator) && modifier.HasValue)
+            {
+                diceText += $" {modifierOperator} {modifier}";
+            }
+            return diceText;
+        }
     }
 }

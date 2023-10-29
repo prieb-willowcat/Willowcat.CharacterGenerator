@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
+using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.UI.Data;
 using Willowcat.CharacterGenerator.UI.Startup;
-using Willowcat.CharacterGenerator.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
-using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 
 namespace Willowcat.CharacterGenerator.UI
 {
@@ -16,12 +14,14 @@ namespace Willowcat.CharacterGenerator.UI
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        public static IServiceProvider Provider { get; private set; }
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var serviceProvider = Bootstrapper.CreateApp();
-            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+            Provider = Bootstrapper.CreateApp();
+            var mainWindow = Provider.GetRequiredService<MainWindow>();
             Current.MainWindow = mainWindow;
-            var splashWindow = serviceProvider.GetRequiredService<SplashWindow>();
+            var splashWindow = Provider.GetRequiredService<SplashWindow>();
             if (splashWindow.ShowDialog() ?? false)
             {
                 mainWindow.Show();

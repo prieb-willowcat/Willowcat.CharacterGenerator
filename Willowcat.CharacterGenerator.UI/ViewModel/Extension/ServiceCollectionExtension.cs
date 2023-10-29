@@ -19,6 +19,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel.Extension
             services.AddTransient<ChartViewModel>();
             services.AddTransient<MainViewModel>();
             services.AddTransient<InitializeDatabaseViewModel>();
+            services.AddTransient<DiceRollViewModel>();
 
             return services;
         }

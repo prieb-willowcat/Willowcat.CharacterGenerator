@@ -35,7 +35,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             _ChartService = chartService;
             _OptionModel = option;
             InitializeGoToChartModel(eventAggregator, option);
-            FormattedDescription = RichTextStringFormatters.ReplaceChartKeysWithChartNames(chartService, RawDescription);
+            FormattedDescription = RichTextStringFormatters.AddLinks(chartService, RawDescription);
         }
 
         private void InitializeGoToChartModel(IEventAggregator eventAggregator, OptionModel option)

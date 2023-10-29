@@ -1,9 +1,11 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Willowcat.CharacterGenerator.UI.Data;
+using Willowcat.CharacterGenerator.UI.View;
 using Willowcat.CharacterGenerator.UI.ViewModel;
 
 namespace Willowcat.CharacterGenerator.UI
@@ -20,20 +22,20 @@ namespace Willowcat.CharacterGenerator.UI
             DataContext = _ViewModel;
         }
 
-        private void CloseCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void CloseCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+
+        private void CloseCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e) => Close();
+
+        private void DiceRollerCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+
+        private void DiceRollerCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            DiceRollerDialog diceRollerDialog = App.Provider.GetRequiredService<DiceRollerDialog>();
+            diceRollerDialog.Owner = this;
+            diceRollerDialog.Show();
         }
 
-        private void CloseCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void OpenCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        private void OpenCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
         private async void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -54,10 +56,7 @@ namespace Willowcat.CharacterGenerator.UI
             }
         }
 
-        private void NewCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        private void NewCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
         private async void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -68,10 +67,7 @@ namespace Willowcat.CharacterGenerator.UI
             }
         }
 
-        private void SaveAsCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        private void SaveAsCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
         private async void SaveAsCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -82,15 +78,9 @@ namespace Willowcat.CharacterGenerator.UI
             }
         }
 
-        private void SaveCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        private void SaveCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
-        private async void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            await SaveChanges();
-        }
+        private async void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e) => await SaveChanges();
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

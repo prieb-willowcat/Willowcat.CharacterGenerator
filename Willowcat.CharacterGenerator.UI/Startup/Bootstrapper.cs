@@ -8,6 +8,8 @@ using Willowcat.CharacterGenerator.EntityFramework.Extension;
 using Willowcat.CharacterGenerator.FlatFile.Extension;
 using Willowcat.CharacterGenerator.FlatFile.TextRepository;
 using Willowcat.CharacterGenerator.OnlineGenerators.Extension;
+using Willowcat.CharacterGenerator.UI.View;
+using Willowcat.CharacterGenerator.UI.ViewModel;
 using Willowcat.CharacterGenerator.UI.ViewModel.Extension;
 
 namespace Willowcat.CharacterGenerator.UI.Startup
@@ -53,8 +55,16 @@ namespace Willowcat.CharacterGenerator.UI.Startup
 
         private static ServiceCollection RegisterViews(this ServiceCollection services)
         {
-            services.AddTransient<MainWindow>();
-            services.AddTransient<SplashWindow>();
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<SplashWindow>();
+            services.AddTransient(provider =>
+            {
+                var viewModel = provider.GetRequiredService<DiceRollViewModel>();
+                return new DiceRollerDialog()
+                {
+                    DataContext = viewModel
+                };
+            });
             return services;
         }
     }

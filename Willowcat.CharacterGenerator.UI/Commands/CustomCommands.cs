@@ -13,5 +13,15 @@ namespace Willowcat.CharacterGenerator.UI.Commands
                 new KeyGesture(Key.N, ModifierKeys.Control)
            }
        );
+
+        public static readonly RoutedUICommand DiceRoller = new RoutedUICommand(
+           "Dice Roller...",
+           "DiceRoller",
+           typeof(CustomCommands),
+           new InputGestureCollection()
+           {
+                new KeyGesture(Key.F6)
+           }
+       );
     }
 }
