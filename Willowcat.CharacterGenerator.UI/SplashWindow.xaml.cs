@@ -43,5 +43,20 @@ namespace Willowcat.CharacterGenerator.UI
                 DialogResult = shouldClose;
             }
         }
+
+        private async void reloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool shouldClose = false;
+            if (DataContext is InitializeDatabaseViewModel viewModel)
+            {
+                Cursor = Cursors.Wait;
+                shouldClose = await viewModel.LoadDataAsync(true);
+            }
+            Cursor = Cursors.Arrow;
+            if (shouldClose)
+            {
+                DialogResult = shouldClose;
+            }
+        }
     }
 }

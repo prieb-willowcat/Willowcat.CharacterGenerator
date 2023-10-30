@@ -128,7 +128,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             }
         }
 
-        public async Task<bool> LoadDataAsync()
+        public async Task<bool> LoadDataAsync(bool deleteExistingDatabase = false)
         {
             lock (_Lock)
             {
@@ -145,7 +145,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
                 }
                 if (CanLoadDatabase())
                 {
-                    HasError = !(await InitializeDatabaseAsync(TokenSource.Token));
+                    HasError = !(await InitializeDatabaseAsync(deleteExistingDatabase, TokenSource.Token));
                 }
                 else
                 {
@@ -186,10 +186,13 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
             return !string.IsNullOrEmpty(ResourcesDirectory) && Directory.Exists(ResourcesDirectory);
         }
 
-        private async Task<bool> InitializeDatabaseAsync(CancellationToken cancellationToken)
+        private async Task<bool> InitializeDatabaseAsync(bool deleteExistingDatabase, CancellationToken cancellationToken)
         {
             bool success = false;
-            //DatabaseMigrationService.ClearOldDatabase(DatabaseLocation);
+            if (deleteExistingDatabase)
+            {
+                DatabaseMigrationService.ClearOldDatabase(DatabaseLocation);
+            }
             if (await _databaseMigrationService.InitializeAsync(cancellationToken))
             {
                 success = true;

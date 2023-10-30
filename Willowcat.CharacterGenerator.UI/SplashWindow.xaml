@@ -56,16 +56,23 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1"
-                    x:Name="startButton"
-                    Content="Start"
-                    Click="startButton_Click" />
             <ToggleButton Grid.Column="0"
                           x:Name="detailsButton"
                           Visibility="Collapsed"
                           IsChecked="True"
                           Content="Details" />
+            <Button Grid.Column="1"
+                    x:Name="startButton"
+                    Content="Start with existing database"
+                    ToolTip="Creates the database if not found."
+                    Click="startButton_Click" />
+            <Button Grid.Column="2"
+                    x:Name="reloadButton"
+                    Content="Start with new database"
+                    ToolTip="Deletes the existing database and refreshes it with the files from the resources directory"
+                    Click="reloadButton_Click" />
         </Grid>
 
         <TextBox Grid.Row="5"
