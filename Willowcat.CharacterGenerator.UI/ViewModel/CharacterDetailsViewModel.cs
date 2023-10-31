@@ -147,7 +147,10 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel
 
         private void OnDeleteRowExecute()
         {
-            DetailOptionCollection.RemoveAt(SelectedIndex);
+            if (SelectedIndex >= 0 && SelectedIndex < DetailOptionCollection.Count)
+            {
+                Remove(DetailOptionCollection[SelectedIndex]);
+            }
         }
 
         private void OnMoveRowDownExecute() => MoveSelectedItems(1);

@@ -116,7 +116,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Character Notes">
-                    <controls:RichTextBoxEditor XamlDocument="{Binding CharacterDetailsViewModel.Notes}" />
+                    <controls:RichTextBoxEditor XamlDocument="{Binding CharacterDetailsViewModel.Notes,Mode=TwoWay}" />
                 </TabItem>
             </TabControl>
         </Grid>
