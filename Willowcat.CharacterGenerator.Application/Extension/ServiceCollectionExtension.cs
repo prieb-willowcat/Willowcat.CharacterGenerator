@@ -6,7 +6,7 @@ namespace Willowcat.CharacterGenerator.Application.Extension
 {
     public static class ServiceCollectionExtension
     {
-        public static ServiceCollection RegisterApplicationServices(this ServiceCollection services)
+        public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton(provider => new MythicAutoGeneratorFactory());
             services.AddSingleton<IChartCollectionRepository>(provider => provider.GetRequiredService<MythicAutoGeneratorFactory>());

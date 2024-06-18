@@ -18,9 +18,11 @@ namespace Willowcat.CharacterGenerator.UI
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Provider = Bootstrapper.CreateApp();
+            var host = Bootstrapper.CreateApp();
+            Provider = host.Services;
             var mainWindow = Provider.GetRequiredService<MainWindow>();
             Current.MainWindow = mainWindow;
+#if false
             var splashWindow = Provider.GetRequiredService<SplashWindow>();
             if (splashWindow.ShowDialog() ?? false)
             {
@@ -30,6 +32,9 @@ namespace Willowcat.CharacterGenerator.UI
             {
                 Shutdown();
             }
+#else
+            mainWindow.Show();            
+#endif
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

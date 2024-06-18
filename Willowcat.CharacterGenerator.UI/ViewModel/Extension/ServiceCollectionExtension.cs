@@ -7,7 +7,7 @@ namespace Willowcat.CharacterGenerator.UI.ViewModel.Extension
 {
     public static class ServiceCollectionExtension
     {
-        public static ServiceCollection RegisterViewModels(this ServiceCollection services)
+        public static IServiceCollection RegisterViewModels(this IServiceCollection services)
         {
             var chartProgress = new Progress<ChartSetupMessage>();
             services.AddSingleton(chartProgress);

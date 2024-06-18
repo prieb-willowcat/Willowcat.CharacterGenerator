@@ -7,7 +7,7 @@ namespace Willowcat.CharacterGenerator.OnlineGenerators.Extension
 {
     public static class ServiceCollectionExtension
     {
-        public static ServiceCollection RegisterOnlineGenerators(this ServiceCollection services, Func<string> getBehindTheNameApiKey)
+        public static IServiceCollection RegisterOnlineGenerators(this IServiceCollection services, Func<string> getBehindTheNameApiKey)
         {
             services.AddSingleton(provider =>
             {
